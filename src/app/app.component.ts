@@ -23,5 +23,8 @@ import { FooterComponent } from './components/footer/footer.component';
   ],
 })
 export class AppComponent {
+  ngOnInit() {
+    document.documentElement.classList.add('dark');
+  }
   title = 'NaHero';
 }

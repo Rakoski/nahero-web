@@ -1,3 +1,27 @@
-<header class="bg-blue-500 p-4 text-white">
-  <p>Header works!</p>
+<header class="text-white shadow-md">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <a href="/" class="text-2xl font-bold text-yellow-500"> NaHero </a>
+      <nav class="hidden space-x-6 md:flex">
+        <a href="#" class="transition-colors hover:text-green-200"> Simulados </a>
+        <a href="#" class="transition-colors hover:text-green-200"> Certificações </a>
+        <a href="#" class="transition-colors hover:text-green-200"> Sobre </a>
+        <a href="#" class="transition-colors hover:text-green-200"> Contato </a>
+      </nav>
+      <div class="flex items-center space-x-3">
+        <a
+          href="/login"
+          class="rounded-md px-4 py-2 text-white transition-colors hover:bg-yellow-700"
+        >
+          Login
+        </a>
+        <a
+          href="/cadastro"
+          class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
+        >
+          Cadastre-se
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
