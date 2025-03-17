@@ -1,6 +1,6 @@
 # NaheroWeb
 
-This is the front-end repository for the NaHero project.
+This is the front-end repository for the NaHero project - an exam simulation web app.
 
 It was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 
