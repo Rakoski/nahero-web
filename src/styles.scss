@@ -112,6 +112,7 @@
     --brand-yellow-foreground: 0 0% 100%; /* hsl(0 0% 100%) */
     --brand-yellow-dark: 36 80% 30%; /* hsl(36, 100%, 50%) */
     --brand-yellow-dark-foreground: 200 19% 18%; /* hsla(200, 19%, 18%) */
+    --brand-yellow-gradient: 37 100% 51%; /* hsl(25 100% 51%) */
     --brand-amber-300: 47 100% 50%; /* hsl(47, 100%, 50%) */
     --brand-amber-100: 43 100% 84%; /* hsl(43, 100%, 84%)*/
     --brand-purple: 260 54% 45%; /* hsl(260 54% 45%) */
@@ -179,6 +180,15 @@
     @apply border-border;
   }
 
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
   body {
     @apply bg-background text-foreground;
   }

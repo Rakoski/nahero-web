@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -11,7 +13,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => {
-      return import('./pages/login/login.component').then((m) => m.LoginComponent);
+      return import('./pages/login/login.component').then((m) => m.LoginPageComponent);
     },
   },
   {
@@ -21,3 +23,9 @@ export const routes: Routes = [
     },
   },
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

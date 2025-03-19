@@ -46,33 +46,40 @@ module.exports = {
           foreground: 'hsl(var(--card-foreground))',
         },
         'brand-blue': {
+          950: 'hsl(var(--brand-blue-950))',
           DEFAULT: 'hsl(var(--brand-blue))',
           foreground: 'hsl(var(--brand-blue-foreground))',
-          950: 'hsl(var(--brand-blue-950))',
         },
         'brand-red': {
+          100: 'hsl(var(--brand-red-100))',
           DEFAULT: 'hsl(var(--brand-red))',
           foreground: 'hsl(var(--brand-red-foreground))',
           dark: 'hsl(var(--brand-red-dark))',
-          100: 'hsl(var(--brand-red-100))',
           gradient: 'hsl(var(--brand-red-gradient))',
         },
         'brand-green': {
-          DEFAULT: 'hsl(var(--brand-green))',
-          foreground: 'hsl(var(--brand-green-foreground))',
-          dark: 'hsl(var(--brand-green-dark))',
           500: 'hsl(var(--brand-green-500))',
           800: 'hsl(var(--brand-green-800))',
           900: 'hsl(var(--brand-green-900))',
+          DEFAULT: 'hsl(var(--brand-green))',
+          foreground: 'hsl(var(--brand-green-foreground))',
+          dark: 'hsl(var(--brand-green-dark))',
         },
         'brand-orange': {
-          DEFAULT: 'hsl(var(--brand-orange))',
-          foreground: 'hsl(var(--brand-orange-foreground))',
-          dark: 'hsl(var(--brand-orange-dark))',
-          gradient: 'hsl(var(--brand-orange-gradient))',
           100: 'hsl(var(--brand-orange-100))',
           800: 'hsl(var(--brand-orange-800))',
           900: 'hsl(var(--brand-orange-900))',
+          DEFAULT: 'hsl(var(--brand-orange))',
+          foreground: 'hsl(var(--brand-orange-foreground))',
+          dark: 'hsl(var(--brand-orange-dark))',
+          gradient: 'hsl(var(--brand-yellow-gradient))',
+        },
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
         },
       },
       borderRadius: {
@@ -82,12 +89,20 @@ module.exports = {
       },
       keyframes: {
         'accordion-down': {
-          from: { height: 0 },
-          to: { height: 'var(--radix-accordion-content-height)' },
+          from: {
+            height: 0,
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)',
+          },
         },
         'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: 0 },
+          from: {
+            height: 'var(--radix-accordion-content-height)',
+          },
+          to: {
+            height: 0,
+          },
         },
       },
       animation: {
