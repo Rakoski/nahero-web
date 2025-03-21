@@ -49,9 +49,9 @@ export class AuthInterceptor implements HttpInterceptor {
   private isAuthRequest(request: HttpRequest<any>): boolean {
     const url = request.url.toLowerCase();
     return (
-      url.includes('/auth/login') ||
-      url.includes('/auth/register') ||
-      url.includes('/auth/refresh-token')
+      url.includes('/auth/v1/login') ||
+      url.includes('/auth/v1/register') ||
+      url.includes('/auth/v1/refresh-token')
     );
   }
 
