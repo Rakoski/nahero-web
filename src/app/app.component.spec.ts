@@ -1,10 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { RouterOutlet, RouterModule } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { Component } from '@angular/core';
+
+// Create mock components
+@Component({ selector: 'app-header', template: '', standalone: true })
+class MockHeaderComponent {}
+
+@Component({ selector: 'app-footer', template: '', standalone: true })
+class MockFooterComponent {}
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [
+        AppComponent,
+        RouterModule.forRoot([]),
+        MockHeaderComponent,
+        MockFooterComponent
+      ],
     }).compileComponents();
   });
 
@@ -14,16 +30,17 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'nahero-web' title`, () => {
+  it(`should have the 'NaHero' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('nahero-web');
+    expect(app.title).toEqual('NaHero');
   });
 
-  it('should render title', () => {
+  // Removing this test as there is no h1 element in the template
+  it('should render router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, nahero-web');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

@@ -94,7 +94,7 @@ export type ButtonProps = VariantProps<typeof buttonVariants>;
   imports: [CommonModule],
   template: `
     <button
-      type="button"
+      [type]="type()"
       [disabled]="disabled()"
       [attr.aria-disabled]="disabled()"
       (click)="onClick($event)"
@@ -113,6 +113,7 @@ export class ButtonComponent {
   readonly typeFormat = input<ButtonProps['typeFormat']>('rounded');
   readonly disabled = input<boolean>(false);
   readonly class = input<string>('');
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
 
   readonly buttonClick = output<MouseEvent>();
 

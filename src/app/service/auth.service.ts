@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginResponse, RefreshTokenResponse, User } from '../model/nahero.type';
+import { API_URL } from '../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class AuthService {
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private readonly TOKEN_EXPIRY_KEY = 'token_expiry';
   private readonly USER_DATA_KEY = 'user_data';
+  private readonly baseUrl = API_URL;
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -32,9 +34,10 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/v1/auth/login', { email, password }).pipe(
+    return this.http.post<LoginResponse>(this.baseUrl + 'auth/login', { email, password }).pipe(
       tap((response) => this.handleAuthentication(response)),
       catchError((error) => {
+        console.log('Using API URL:', API_URL);
         console.error('Login error', error);
         return throwError(() => new Error('Login failed. Please check your credentials.'));
       })
@@ -42,21 +45,18 @@ export class AuthService {
   }
 
   register(email: string, password: string, name: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/v1/auth/register', { email, password, name }).pipe(
-      tap((response) => this.handleAuthentication(response)),
-      catchError((error) => {
-        console.error('Registration error', error);
-        return throwError(() => new Error('Registration failed. Please try again.'));
-      })
-    );
+    return this.http
+      .post<LoginResponse>(this.baseUrl + 'auth/register', { email, password, name })
+      .pipe(
+        tap((response) => this.handleAuthentication(response)),
+        catchError((error) => {
+          console.error('Registration error', error);
+          return throwError(() => new Error('Registration failed. Please try again.'));
+        })
+      );
   }
 
   logout(): void {
-    this.http.post('/api/auth/logout', { refreshToken: this.getRefreshToken() }).subscribe({
-      next: () => console.log('Logged out on server'),
-      error: (err) => console.error('Server logout failed', err),
-    });
-
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.TOKEN_EXPIRY_KEY);
@@ -74,7 +74,7 @@ export class AuthService {
     }
 
     return this.http
-      .post<RefreshTokenResponse>('/api/v1/auth/refresh-token', { refreshToken })
+      .post<RefreshTokenResponse>(this.baseUrl + 'auth/refresh-token', { refreshToken })
       .pipe(
         tap((response) => this.handleRefreshToken(response)),
         catchError((error) => {
