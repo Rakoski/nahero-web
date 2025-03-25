@@ -37,6 +37,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(this.baseUrl + 'auth/login', { email, password }).pipe(
       tap((response) => this.handleAuthentication(response)),
       catchError((error) => {
+        console.log('Using API URL:', API_URL);
         console.error('Login error', error);
         return throwError(() => new Error('Login failed. Please check your credentials.'));
       })
