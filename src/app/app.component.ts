@@ -8,11 +8,13 @@ import { FooterComponent } from './components/footer/footer.component';
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   standalone: true,
   template: `
-    <app-header />
-    <main>
-      <router-outlet />
-    </main>
-    <app-footer />
+    <div class="flex flex-col min-h-screen">
+      <app-header />
+      <main class="flex-grow">
+        <router-outlet />
+      </main>
+      <app-footer />
+    </div>
   `,
   styles: [
     `

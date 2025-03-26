@@ -5,7 +5,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { Component } from '@angular/core';
 
-// Create mock components
 @Component({ selector: 'app-header', template: '', standalone: true })
 class MockHeaderComponent {}
 
@@ -15,12 +14,7 @@ class MockFooterComponent {}
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        AppComponent,
-        RouterModule.forRoot([]),
-        MockHeaderComponent,
-        MockFooterComponent
-      ],
+      imports: [AppComponent, RouterModule.forRoot([]), MockHeaderComponent, MockFooterComponent],
     }).compileComponents();
   });
 
@@ -36,7 +30,6 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('NaHero');
   });
 
-  // Removing this test as there is no h1 element in the template
   it('should render router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
