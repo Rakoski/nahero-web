@@ -8,7 +8,7 @@ import { CheckedEmailInputComponent } from '../input/checked-email-input.compone
 import { PasswordInputComponent } from '../input/password-input.component';
 import { routes } from '../../app.routes';
 import { finalize } from 'rxjs/operators';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../service/auth/auth.service';
 
 @Component({
   selector: 'app-login-form',

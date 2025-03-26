@@ -2,12 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginFormComponent } from './login.component';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../service/auth/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { of } from 'rxjs';
 
-// Mock components
 @Component({ selector: 'app-button', template: '', standalone: true })
 class MockButtonComponent {}
 
@@ -28,7 +27,7 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     authServiceMock = {
       login: jasmine.createSpy('login').and.returnValue(of({})),
-      isLoggedIn: false
+      isLoggedIn: false,
     };
 
     await TestBed.configureTestingModule({
@@ -40,12 +39,9 @@ describe('LoginComponent', () => {
         MockButtonComponent,
         MockTbLoaderComponent,
         MockCheckedEmailInputComponent,
-        MockPasswordInputComponent
+        MockPasswordInputComponent,
       ],
-      providers: [
-        FormBuilder,
-        { provide: AuthService, useValue: authServiceMock }
-      ]
+      providers: [FormBuilder, { provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginFormComponent);

@@ -33,6 +33,25 @@ export interface LoginResponse {
   user: User;
 }
 
+export interface Exam {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+export interface PracticeExam {
+  id: string;
+  exam: Exam;
+  title: string;
+  description?: string;
+  passingScore?: number;
+  teacher: User;
+  timeLimit?: number;
+  difficultyLevel?: number;
+  isActive: boolean;
+  createdAt: Date;
+}
+
 export interface RefreshTokenResponse {
   accessToken: string;
 }

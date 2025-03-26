@@ -3,7 +3,6 @@ import { LoginPageComponent } from './login.component';
 import { Component } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
-// Mock the login form component
 @Component({ selector: 'app-login-form', template: '', standalone: true })
 class MockLoginFormComponent {}
 
@@ -13,11 +12,7 @@ describe('LoginPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        LoginPageComponent,
-        MockLoginFormComponent,
-        RouterTestingModule
-      ],
+      imports: [LoginPageComponent, MockLoginFormComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPageComponent);
