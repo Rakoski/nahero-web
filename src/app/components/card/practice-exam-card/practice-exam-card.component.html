@@ -1,0 +1,38 @@
+<div ubCard class="overflow-hidden h-full flex flex-col">
+  <div ubCardHeader>
+    <div class="flex justify-between items-start mb-2">
+      <div>
+        <h3 ubCardTitle>{{ practiceExam.title }}</h3>
+        <p ubCardDescription>{{ practiceExam.exam.title }}</p>
+      </div>
+      <div class="px-2 py-1 bg-primary text-primary-foreground rounded text-sm shrink-0">
+        {{ getDifficultyLabel(practiceExam.difficultyLevel ?? 0) }}
+      </div>
+    </div>
+  </div>
+  <div ubCardContent class="flex-grow">
+    <p class="mb-4 line-clamp-3">{{ practiceExam.description }}</p>
+    <div class="space-y-2 text-sm text-muted-foreground">
+      <div class="flex items-center justify-between">
+        <span>Tempo Limite:</span>
+        <span>{{ formatTimeLimit(practiceExam.timeLimit) }}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span>Nota mínima:</span>
+        <span>{{ practiceExam.passingScore }}%</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span>Criado por:</span>
+        <span>{{ practiceExam.teacher.name }}</span>
+      </div>
+    </div>
+  </div>
+  <div ubCardFooter class="justify-end space-x-2 mt-auto">
+    <button
+      class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+      (click)="router.navigate(['/practice-exam', practiceExam.id])"
+    >
+      Começar
+    </button>
+  </div>
+</div>

@@ -2,30 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_URL, size } from '../../../constants';
-
-interface User {
-  id: string | number;
-  name: string;
-}
-
-interface Exam {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-interface PracticeExam {
-  id: string;
-  exam: Exam;
-  title: string;
-  description?: string;
-  passingScore?: number;
-  teacher: User;
-  timeLimit?: number;
-  difficultyLevel?: number;
-  isActive: boolean;
-  createdAt: Date;
-}
+import { PracticeExam } from '../../model/nahero.type';
 
 interface PageResponse<T> {
   content: T[];
