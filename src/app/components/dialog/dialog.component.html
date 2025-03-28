@@ -1,0 +1,53 @@
+<ng-template #dialogContent>
+  <div ubDialogContent>
+    <div ubDialogHeader>
+      <h2 ubDialogTitle>Confirmar Simulado</h2>
+      <p ubDialogDescription>Confira as informações do simulado antes de começar.</p>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <h4 class="font-medium text-lg">{{ practiceExam.title }}</h4>
+        <p *ngIf="practiceExam.description" class="text-sm text-muted-foreground mt-1">
+          {{ practiceExam.description }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-muted-foreground">Nível de Dificuldade</p>
+          <p class="font-medium">{{ getDifficultyLabel(practiceExam.difficultyLevel ?? 5) }}</p>
+        </div>
+
+        <div>
+          <p class="text-sm text-muted-foreground">Tempo</p>
+          <p class="font-medium">{{ practiceExam.timeLimit }} minutos</p>
+        </div>
+      </div>
+
+      <div *ngIf="practiceExam.passingScore">
+        <p class="text-sm text-muted-foreground">Nota para aprovação</p>
+        <p class="font-medium">{{ practiceExam.passingScore }}%</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <div ubDialogFooter>
+      <Button variant="outline" ubDialogClose>Cancelar</Button>
+      <Button [disabled]="isLoading" (click)="startExam(practiceExam.id)">
+        <span
+          *ngIf="isLoading"
+          class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"
+        ></span>
+        Começar
+      </Button>
+    </div>
+  </div>
+</ng-template>
+
+<Button variant="outline" [ubDialogTrigger]="dialogContent" (click)="handleTriggerClick()">
+  Começar
+</Button>

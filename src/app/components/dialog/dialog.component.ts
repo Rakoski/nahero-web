@@ -1,16 +1,9 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterModule } from '@angular/router';
-import {
-  UbCardDirective,
-  UbCardHeaderDirective,
-  UbCardTitleDirective,
-  UbCardDescriptionDirective,
-  UbCardContentDirective,
-  UbCardFooterDirective,
-} from '@/components/ui/card';
-import { UbButtonDirective } from '@/components/ui/button';
+import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth/auth.service';
+import { PracticeExam } from '../../model/nahero.type';
 import {
   UbDialogCloseDirective,
   UbDialogContentDirective,
@@ -20,28 +13,19 @@ import {
   UbDialogTitleDirective,
   UbDialogTriggerDirective,
 } from '@/components/ui/dialog';
-import { PracticeExam } from '../../../model/nahero.type';
-import { formatTimeLimit, getDifficultyLabel } from '../../../../lib/utils';
-import { AuthService } from '../../../service/auth/auth.service';
-import { API_URL } from '../../../../constants';
+import { ButtonComponent } from '../button/button.component';
+import { getDifficultyLabel } from '../../../lib/utils';
 
 interface CreateStudentPracticeAttemptRequest {
   practiceExamId: number;
 }
 
 @Component({
-  selector: 'app-practice-exam-card',
+  selector: 'app-dialog',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    UbCardDirective,
-    UbCardHeaderDirective,
-    UbCardTitleDirective,
-    UbCardDescriptionDirective,
-    UbCardContentDirective,
-    UbCardFooterDirective,
-    UbButtonDirective,
+    ButtonComponent,
     UbDialogCloseDirective,
     UbDialogContentDirective,
     UbDialogDescriptionDirective,
@@ -50,23 +34,21 @@ interface CreateStudentPracticeAttemptRequest {
     UbDialogTitleDirective,
     UbDialogTriggerDirective,
   ],
-  templateUrl: './practice-exam-card.component.html',
-  styleUrl: './practice-exam-card.component.scss',
+  templateUrl: './dialog.component.html',
+  styles: [],
 })
-export class PracticeExamCardComponent {
+export class DialogComponent {
   @Input() practiceExam!: PracticeExam;
+
   isLoading: boolean = false;
   errorMessage: string = '';
-
   getDifficultyLabel = getDifficultyLabel;
-  formatTimeLimit = formatTimeLimit;
 
   private http = inject(HttpClient);
+  private router = inject(Router);
   private authService = inject(AuthService);
 
-  constructor(public router: Router) {}
-
-  handleDialogTriggerClick(event: Event): void {
+  handleTriggerClick(): void {
     if (!this.authService.isLoggedIn) {
       this.router.navigate(['/login'], {
         queryParams: { returnUrl: this.router.url },
@@ -90,10 +72,9 @@ export class PracticeExamCardComponent {
       practiceExamId: Number(practiceExamId),
     };
 
-    this.http.post<number>(API_URL + 'student-practice-attempts', payload).subscribe({
+    this.http.post<number>('/api/student-practice-attempts', payload).subscribe({
       next: (attemptId) => {
         this.isLoading = false;
-        console.log('Received attempt ID:', attemptId);
         this.router.navigate(['/simulados/attempt', attemptId]);
       },
       error: (error) => {

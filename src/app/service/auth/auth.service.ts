@@ -26,6 +26,7 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
+    console.log('ta autenticado: ', this.getAccessToken()?.toString());
     return !!this.getAccessToken() && this.isTokenValid();
   }
 

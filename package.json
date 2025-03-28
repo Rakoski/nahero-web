@@ -19,6 +19,7 @@
     "@angular/router": "^19.2.0",
     "@ng-icons/core": "^31.2.0",
     "@ng-icons/lucide": "^31.2.0",
+    "@radix-ng/primitives": "^0.32.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "rxjs": "~7.8.0",

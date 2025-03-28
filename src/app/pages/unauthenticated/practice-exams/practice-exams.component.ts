@@ -2,12 +2,23 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { UbInputDirective } from '@/components/ui/input';
 import { UbButtonDirective } from '@/components/ui/button';
+import {
+  UbDialogCloseDirective,
+  UbDialogContentDirective,
+  UbDialogDescriptionDirective,
+  UbDialogFooterDirective,
+  UbDialogHeaderDirective,
+  UbDialogTitleDirective,
+  UbDialogTriggerDirective,
+} from '@/components/ui/dialog';
 import { PracticeExamService } from '../../../service/practice-exam/practice-exam.service';
-import { PracticeExamCardComponent } from '../../../components/card/practice-exam-card/practice-exam-card.component';
+import { AuthService } from '../../../service/auth/auth.service';
 import { PracticeExam } from '../../../model/nahero.type';
 import { getDifficultyLabel } from '../../../../lib/utils';
+import { PracticeExamCardComponent } from '../../../components/card/practice-exam-card/practice-exam-card.component';
 
 interface PaginationOptions {
   page: number;
@@ -21,6 +32,10 @@ interface FilterOptions {
   description?: string;
   difficultyLevel?: number;
   isActive?: boolean;
+}
+
+interface CreateStudentPracticeAttemptRequest {
+  practiceExamId: number;
 }
 
 @Component({
@@ -53,6 +68,8 @@ export class PracticeExamsPage implements OnInit {
   loading: boolean = false;
   allLoaded: boolean = false;
   showFilterModal: boolean = false;
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   tempFilters: FilterOptions = {
     isActive: true,
@@ -60,7 +77,12 @@ export class PracticeExamsPage implements OnInit {
 
   getDifficultyLabel = getDifficultyLabel;
 
-  constructor(private practiceExamService: PracticeExamService, public router: Router) {}
+  constructor(
+    private practiceExamService: PracticeExamService,
+    private authService: AuthService,
+    private http: HttpClient,
+    public router: Router
+  ) {}
 
   ngOnInit() {
     this.tempFilters = { ...this.filters };
@@ -144,6 +166,15 @@ export class PracticeExamsPage implements OnInit {
     this.pageOptions.page = 0;
     this.allLoaded = false;
     this.loadPracticeExams();
+  }
+
+  handleDialogTriggerClick(): void {
+    if (!this.authService.isLoggedIn) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
   }
 
   @HostListener('window:scroll', ['$event'])
