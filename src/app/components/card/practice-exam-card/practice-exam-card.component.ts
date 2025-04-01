@@ -66,15 +66,6 @@ export class PracticeExamCardComponent {
 
   constructor(public router: Router) {}
 
-  handleDialogTriggerClick(event: Event): void {
-    if (!this.authService.isLoggedIn) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: this.router.url },
-      });
-      return;
-    }
-  }
-
   startExam(practiceExamId: string): void {
     if (!this.authService.isLoggedIn) {
       this.router.navigate(['/login'], {
@@ -93,8 +84,7 @@ export class PracticeExamCardComponent {
     this.http.post<number>(API_URL + 'student-practice-attempts', payload).subscribe({
       next: (attemptId) => {
         this.isLoading = false;
-        console.log('Received attempt ID:', attemptId);
-        this.router.navigate(['/simulados/attempt', attemptId]);
+        this.router.navigate(['/practice-exams/attempt', attemptId]);
       },
       error: (error) => {
         this.isLoading = false;
