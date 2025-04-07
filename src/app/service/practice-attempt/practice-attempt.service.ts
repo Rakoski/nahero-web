@@ -7,7 +7,7 @@ import { API_URL } from '../../../constants';
   providedIn: 'root',
 })
 export class PracticeAttemptService {
-  private apiUrl = `${API_URL}/student-practice-attempts`;
+  private apiUrl = `${API_URL}student-practice-attempts`;
 
   constructor(private http: HttpClient) {}
 

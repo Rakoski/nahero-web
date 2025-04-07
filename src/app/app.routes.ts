@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NonAuthGuard } from './guards/non-auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,30 @@ export const routes: Routes = [
       );
     },
     canActivate: [NonAuthGuard],
+  },
+  {
+    path: 'student',
+    children: [
+      {
+        path: 'practice-attempt/:attemptId',
+        loadComponent: () => {
+          return import('./pages/student/practice-attempt/practice-attempt.component').then(
+            (m) => m.PracticeAttemptComponent
+          );
+        },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'practice-attempt/results/:attemptId',
+        loadComponent: () => {
+          // This will be created in the future for results view
+          return import('./pages/student/practice-attempt/practice-attempt.component').then(
+            (m) => m.PracticeAttemptComponent
+          );
+        },
+        canActivate: [AuthGuard],
+      }
+    ]
   },
 ];
 

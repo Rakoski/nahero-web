@@ -23,6 +23,7 @@ import {
 import { PracticeExam } from '../../../model/nahero.type';
 import { formatTimeLimit, getDifficultyLabel } from '../../../../lib/utils';
 import { AuthService } from '../../../service/auth/auth.service';
+import { PracticeAttemptService } from '../../../service/practice-attempt/practice-attempt.service';
 import { API_URL } from '../../../../constants';
 
 interface CreateStudentPracticeAttemptRequest {
@@ -63,6 +64,7 @@ export class PracticeExamCardComponent {
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private practiceAttemptService = inject(PracticeAttemptService);
 
   constructor(public router: Router) {}
 
@@ -77,20 +79,10 @@ export class PracticeExamCardComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const payload: CreateStudentPracticeAttemptRequest = {
-      practiceExamId: Number(practiceExamId),
-    };
-
-    this.http.post<number>(API_URL + 'student-practice-attempts', payload).subscribe({
-      next: (attemptId) => {
-        this.isLoading = false;
-        this.router.navigate(['/practice-exams/attempt', attemptId]);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Erro ao iniciar o simulado. Tente novamente.';
-        console.error('Error starting exam:', error);
-      },
-    });
+    // We no longer create the attempt here - the practice-attempt component will handle it at submission
+    setTimeout(() => {
+      this.isLoading = false;
+      this.router.navigate(['/student/practice-attempt/', practiceExamId]);
+    }, 500); // Small delay to show loading state
   }
 }
