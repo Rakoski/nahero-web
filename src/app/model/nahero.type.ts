@@ -74,9 +74,10 @@ export interface Alternative {
 }
 
 export interface ListQuestionsByStudentResponse {
+  timeLimit: number | undefined;
   id: string;
   content: string;
-  questionTypeId: number;
+  questionType: { id: number; name: string };
   practiceExamId: string;
   imageUrl?: string;
   position: number;

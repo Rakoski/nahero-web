@@ -27,7 +27,7 @@
     <div class="question-nav">
       <div class="exam-timer" [ngClass]="{ warning: timeRemaining < 300 }">
         <span class="mr-2">Tempo restante:</span>
-        <span class="timer-value">{{ formatTime(timeRemaining) }}</span>
+        <span class="timer-value">{{ formatTime() }}</span>
       </div>
 
       <div class="nav-controls">
@@ -78,23 +78,10 @@
           </div>
         </div>
 
-        <div class="alternatives-container">
-          <div class="alternatives-type">
-            <p
-              *ngIf="getCurrentQuestion() && isMultipleChoice(getCurrentQuestion()!)"
-              class="choice-type"
-            >
-              <strong>Questão de múltipla escolha:</strong> Selecione todas as alternativas
-              corretas.
-            </p>
-            <p
-              *ngIf="getCurrentQuestion() && isObjective(getCurrentQuestion()!)"
-              class="choice-type"
-            >
-              <strong>Questão objetiva:</strong> Selecione apenas uma alternativa.
-            </p>
-          </div>
-
+        <div
+          class="alternatives-container"
+          *ngIf="getCurrentQuestion() && needsAlternatives(getCurrentQuestion()!.questionType.id)"
+        >
           <div
             *ngIf="!questionAlternatives.has(getCurrentQuestion()?.id || '')"
             class="loading-alternatives"
@@ -123,11 +110,53 @@
               [ngClass]="{ selected: isSelected(getCurrentQuestion()?.id || '', alternative.id) }"
               (click)="toggleAnswer(getCurrentQuestion()?.id || '', alternative.id)"
             >
-              <div class="alternative-marker">
+              <div
+                class="alternative-marker"
+                [ngClass]="{ square: getCurrentQuestion()?.questionType?.id === 1 }"
+              >
                 <div class="marker-indicator"></div>
               </div>
               <div class="alternative-text" [innerHTML]="alternative.content"></div>
             </div>
+          </div>
+        </div>
+
+        <div
+          class="descriptive-container"
+          *ngIf="getCurrentQuestion() && isDescriptive(getCurrentQuestion()!)"
+        >
+          <div class="descriptive-type">
+            <p class="choice-type">
+              <strong>Questão dissertativa:</strong> Elabore sua resposta no campo abaixo.
+            </p>
+          </div>
+
+          <div class="descriptive-answer">
+            <textarea
+              class="answer-textarea"
+              rows="8"
+              placeholder="Digite sua resposta aqui..."
+              (ngModel)="descriptiveAnswers.get(getCurrentQuestion()?.id || '')"
+              (ngModelChange)="saveDescriptiveAnswer(getCurrentQuestion()?.id || '', $event)"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="sum-container" *ngIf="getCurrentQuestion() && isSum(getCurrentQuestion()!)">
+          <div class="sum-type">
+            <p class="choice-type">
+              <strong>Questão de cálculo:</strong> Digite o resultado no campo abaixo.
+            </p>
+          </div>
+
+          <div class="sum-answer">
+            <input
+              type="number"
+              class="answer-input"
+              placeholder="Digite o resultado..."
+              [ngModel]="sumAnswers.get(getCurrentQuestion()?.id || '')"
+              (ngModelChange)="saveSumAnswer(getCurrentQuestion()?.id || '', $event)"
+            />
           </div>
         </div>
 

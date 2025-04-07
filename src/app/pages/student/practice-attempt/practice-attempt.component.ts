@@ -11,6 +11,14 @@ import {
 import { API_URL } from '../../../../constants';
 import { UbButtonDirective } from '@/components/ui/button';
 
+export enum QuestionType {
+  MULTIPLE_CHOICE = 1,
+  TRUE_FALSE = 2,
+  OBJECTIVE = 3,
+  DESCRIPTIVE = 4,
+  SUM = 5,
+}
+
 @Component({
   selector: 'app-practice-attempt',
   standalone: true,
@@ -27,6 +35,8 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
 
   currentQuestionIndex: number = 0;
   selectedAnswers: Map<string, string[]> = new Map();
+  descriptiveAnswers: Map<string, string> = new Map();
+  sumAnswers: Map<string, number> = new Map();
 
   timeRemaining: number = 0;
   timerInterval: any;
@@ -36,9 +46,10 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
   error: string | null = null;
   examSubmitted: boolean = false;
 
-  // New properties for pagination
   questionsPerPage: number = 15;
   questionPageIndex: number = 0;
+
+  QuestionType = QuestionType;
 
   constructor(private route: ActivatedRoute, public router: Router, private http: HttpClient) {}
 
@@ -70,6 +81,12 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
 
           this.questions.forEach((question) => {
             this.selectedAnswers.set(question.id, []);
+
+            if (question.questionType?.id === QuestionType.DESCRIPTIVE) {
+              this.descriptiveAnswers.set(question.id, '');
+            } else if (question.questionType?.id === QuestionType.SUM) {
+              this.sumAnswers.set(question.id, 0);
+            }
           });
 
           this.loadAlternativesForCurrentQuestion();
@@ -92,23 +109,25 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     const currentQuestion = this.getCurrentQuestion();
     if (!currentQuestion) return;
 
-    const questionId = currentQuestion.id;
+    if (this.needsAlternatives(currentQuestion.questionType?.id)) {
+      const questionId = currentQuestion.id;
 
-    if (this.questionAlternatives.has(questionId)) return;
+      if (this.questionAlternatives.has(questionId)) return;
 
-    this.loadingMessage = 'Carregando alternativas...';
+      this.loadingMessage = 'Carregando alternativas...';
 
-    this.http.get<Alternative[]>(`${API_URL}alternatives/${questionId}`).subscribe({
-      next: (alternatives) => {
-        this.questionAlternatives.set(questionId, alternatives);
-        this.loadingMessage = 'Carregando simulado...';
-      },
-      error: (error) => {
-        console.error(`Error loading alternatives for question ${questionId}:`, error);
-        this.questionAlternatives.set(questionId, []);
-        this.loadingMessage = 'Carregando simulado...';
-      },
-    });
+      this.http.get<Alternative[]>(`${API_URL}alternatives/${questionId}`).subscribe({
+        next: (alternatives) => {
+          this.questionAlternatives.set(questionId, alternatives);
+          this.loadingMessage = 'Carregando simulado...';
+        },
+        error: (error) => {
+          console.error(`Error loading alternatives for question ${questionId}:`, error);
+          this.questionAlternatives.set(questionId, []);
+          this.loadingMessage = 'Carregando simulado...';
+        },
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -118,23 +137,29 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    if (!this.practiceExam?.timeLimit) return;
+    if (!this.timeRemaining) {
+      const timeLimit = this.practiceExam?.timeLimit || 60;
+      this.timeRemaining = timeLimit * 60;
+    }
 
     this.timerInterval = setInterval(() => {
       if (this.timeRemaining > 0) {
         this.timeRemaining--;
       } else {
+        clearInterval(this.timerInterval);
         this.submitExam();
       }
     }, 1000);
   }
 
-  formatTime(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
+  formatTime(unused?: number): string {
+    const totalSeconds = this.timeRemaining;
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
       .toString()
       .padStart(2, '0')}`;
   }
@@ -151,12 +176,30 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     return this.questionAlternatives.get(currentQuestion.id) || [];
   }
 
+  needsAlternatives(questionTypeid: number): boolean {
+    return [QuestionType.MULTIPLE_CHOICE, QuestionType.TRUE_FALSE, QuestionType.OBJECTIVE].includes(
+      questionTypeid
+    );
+  }
+
   isMultipleChoice(question: ListQuestionsByStudentResponse): boolean {
-    return question.questionTypeId === 1;
+    return question.questionType?.id === QuestionType.MULTIPLE_CHOICE;
+  }
+
+  isTrueFalse(question: ListQuestionsByStudentResponse): boolean {
+    return question.questionType?.id === QuestionType.TRUE_FALSE;
   }
 
   isObjective(question: ListQuestionsByStudentResponse): boolean {
-    return question.questionTypeId === 3;
+    return question.questionType?.id === QuestionType.OBJECTIVE;
+  }
+
+  isDescriptive(question: ListQuestionsByStudentResponse): boolean {
+    return question.questionType?.id === QuestionType.DESCRIPTIVE;
+  }
+
+  isSum(question: ListQuestionsByStudentResponse): boolean {
+    return question.questionType?.id === QuestionType.SUM;
   }
 
   toggleAnswer(questionId: string, alternativeId: string): void {
@@ -174,9 +217,17 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
       } else {
         this.selectedAnswers.set(questionId, [...currentAnswers, alternativeId]);
       }
-    } else {
+    } else if (this.isTrueFalse(currentQuestion) || this.isObjective(currentQuestion)) {
       this.selectedAnswers.set(questionId, [alternativeId]);
     }
+  }
+
+  saveDescriptiveAnswer(questionId: string, answerText: string): void {
+    this.descriptiveAnswers.set(questionId, answerText);
+  }
+
+  saveSumAnswer(questionId: string, value: number): void {
+    this.sumAnswers.set(questionId, value);
   }
 
   isSelected(questionId: string, alternativeId: string): boolean {
@@ -184,21 +235,18 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     return answers.includes(alternativeId);
   }
 
-  // New method for question pagination
   getVisibleQuestions(): ListQuestionsByStudentResponse[] {
     const startIndex = this.questionPageIndex * this.questionsPerPage;
     const endIndex = Math.min(startIndex + this.questionsPerPage, this.questions.length);
     return this.questions.slice(startIndex, endIndex);
   }
 
-  // New method to handle previous page of questions
   previousQuestionPage(): void {
     if (this.questionPageIndex > 0) {
       this.questionPageIndex--;
     }
   }
 
-  // New method to handle next page of questions
   nextQuestionPage(): void {
     const maxPage = Math.ceil(this.questions.length / this.questionsPerPage) - 1;
     if (this.questionPageIndex < maxPage) {
@@ -206,14 +254,10 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Updated goToQuestion method
   goToQuestion(index: number): void {
     if (index >= 0 && index < this.questions.length) {
       this.currentQuestionIndex = index;
-
-      // Update the pagination to show the current question
       this.questionPageIndex = Math.floor(index / this.questionsPerPage);
-
       this.loadAlternativesForCurrentQuestion();
     }
   }
@@ -221,13 +265,10 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
   nextQuestion(): void {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
-
-      // Update pagination when changing questions
       const newPageIndex = Math.floor(this.currentQuestionIndex / this.questionsPerPage);
       if (newPageIndex !== this.questionPageIndex) {
         this.questionPageIndex = newPageIndex;
       }
-
       this.loadAlternativesForCurrentQuestion();
     }
   }
@@ -235,20 +276,32 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
-
-      // Update pagination when changing questions
       const newPageIndex = Math.floor(this.currentQuestionIndex / this.questionsPerPage);
       if (newPageIndex !== this.questionPageIndex) {
         this.questionPageIndex = newPageIndex;
       }
-
       this.loadAlternativesForCurrentQuestion();
     }
   }
 
   hasAnswered(questionId: string): boolean {
-    const answers = this.selectedAnswers.get(questionId) || [];
-    return answers.length > 0;
+    const question = this.questions.find((q) => q.id === questionId);
+    if (!question) return false;
+
+    switch (question.questionType?.id) {
+      case QuestionType.MULTIPLE_CHOICE:
+      case QuestionType.OBJECTIVE:
+      case QuestionType.TRUE_FALSE:
+        const answers = this.selectedAnswers.get(questionId) || [];
+        return answers.length > 0;
+      case QuestionType.DESCRIPTIVE:
+        const descriptiveAnswer = this.descriptiveAnswers.get(questionId) || '';
+        return descriptiveAnswer.trim().length > 0;
+      case QuestionType.SUM:
+        return this.sumAnswers.has(questionId);
+      default:
+        return false;
+    }
   }
 
   submitExam(): void {
@@ -265,12 +318,25 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
         next: (attemptId) => {
           this.attemptId = attemptId.toString();
 
-          const answers = Array.from(this.selectedAnswers.entries()).map(
-            ([questionId, alternativeIds]) => ({
-              questionId,
-              alternativeIds,
-            })
-          );
+          const answers = this.questions.map((question) => {
+            let answerData: any = { questionId: question.id };
+
+            switch (question.questionType?.id) {
+              case QuestionType.MULTIPLE_CHOICE:
+              case QuestionType.OBJECTIVE:
+              case QuestionType.TRUE_FALSE:
+                answerData.alternativeIds = this.selectedAnswers.get(question.id) || [];
+                break;
+              case QuestionType.DESCRIPTIVE:
+                answerData.descriptiveAnswer = this.descriptiveAnswers.get(question.id) || '';
+                break;
+              case QuestionType.SUM:
+                answerData.sumAnswer = this.sumAnswers.get(question.id) || null;
+                break;
+            }
+
+            return answerData;
+          });
 
           this.http
             .post(`${API_URL}student-practice-attempts/${this.attemptId}/submit`, {
@@ -280,7 +346,6 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
               next: () => {
                 this.examSubmitted = true;
                 this.isLoading = false;
-
                 this.router.navigate(['/student/practice-attempt/results', this.attemptId]);
               },
               error: (error) => {
