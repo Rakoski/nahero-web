@@ -1,0 +1,199 @@
+<div class="practice-exam-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="flex flex-col items-center justify-center gap-2">
+      <div
+        class="h-8 w-8 animate-spin rounded-full border-3 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status"
+      >
+        <span
+          class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+          >Loading...</span
+        >
+      </div>
+      <div class="text-sm mt-2">{{ loadingMessage }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div>
+      <p>{{ error }}</p>
+      <button ubButton (click)="router.navigate(['/practice-exams'])" style="margin-top: 10px">
+        Voltar para Simulados
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !error && questions.length > 0" class="exam-content">
+    <div class="question-nav">
+      <div class="exam-timer" [ngClass]="{ warning: timeRemaining < 300 }">
+        <span class="mr-2">Tempo restante:</span>
+        <span class="timer-value">{{ formatTime() }}</span>
+      </div>
+
+      <div class="nav-controls">
+        <button
+          class="nav-arrow"
+          (click)="previousQuestionPage()"
+          [disabled]="questionPageIndex === 0"
+        >
+          &lt;
+        </button>
+        <div class="question-list">
+          <button
+            *ngFor="let question of getVisibleQuestions(); let i = index"
+            class="question-nav-item"
+            [ngClass]="{
+              current: questionPageIndex * questionsPerPage + i === currentQuestionIndex,
+              answered: hasAnswered(question.id)
+            }"
+            (click)="goToQuestion(questionPageIndex * questionsPerPage + i)"
+          >
+            {{ questionPageIndex * questionsPerPage + i + 1 }}
+          </button>
+        </div>
+        <button
+          class="nav-arrow"
+          (click)="nextQuestionPage()"
+          [disabled]="(questionPageIndex + 1) * questionsPerPage >= questions.length"
+        >
+          &gt;
+        </button>
+      </div>
+
+      <div class="question-counter">
+        <span>{{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
+      </div>
+    </div>
+
+    <main class="exam-main">
+      <div class="question-content">
+        <div class="question-card">
+          <div class="question-text">
+            <h2 class="mb-2">Questão {{ currentQuestionIndex + 1 }}</h2>
+            <div [innerHTML]="getCurrentQuestion()?.content"></div>
+
+            <div *ngIf="getCurrentQuestion()?.imageUrl" class="question-image">
+              <img [src]="getCurrentQuestion()?.imageUrl" alt="Question Image" />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="alternatives-container"
+          *ngIf="getCurrentQuestion() && needsAlternatives(getCurrentQuestion()!.questionType.id)"
+        >
+          <div
+            *ngIf="!questionAlternatives.has(getCurrentQuestion()?.id || '')"
+            class="loading-alternatives"
+          >
+            <div class="flex flex-col items-center justify-center gap-2 py-6">
+              <div
+                class="h-6 w-6 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+              >
+                <span
+                  class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                  >Loading...</span
+                >
+              </div>
+              <div class="text-sm mt-2">Carregando alternativas...</div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="questionAlternatives.has(getCurrentQuestion()?.id || '')"
+            class="alternatives-list"
+          >
+            <div
+              *ngFor="let alternative of getAlternativesForCurrentQuestion()"
+              class="alternative-item"
+              [ngClass]="{ selected: isSelected(getCurrentQuestion()?.id || '', alternative.id) }"
+              (click)="toggleAnswer(getCurrentQuestion()?.id || '', alternative.id)"
+            >
+              <div
+                class="alternative-marker"
+                [ngClass]="{ square: getCurrentQuestion()?.questionType?.id === 1 }"
+              >
+                <div class="marker-indicator"></div>
+              </div>
+              <div class="alternative-text" [innerHTML]="alternative.content"></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="descriptive-container"
+          *ngIf="getCurrentQuestion() && isDescriptive(getCurrentQuestion()!)"
+        >
+          <div class="descriptive-type">
+            <p class="choice-type">
+              <strong>Questão dissertativa:</strong> Elabore sua resposta no campo abaixo.
+            </p>
+          </div>
+
+          <div class="descriptive-answer">
+            <textarea
+              class="answer-textarea"
+              rows="8"
+              placeholder="Digite sua resposta aqui..."
+              (ngModel)="descriptiveAnswers.get(getCurrentQuestion()?.id || '')"
+              (ngModelChange)="saveDescriptiveAnswer(getCurrentQuestion()?.id || '', $event)"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="sum-container" *ngIf="getCurrentQuestion() && isSum(getCurrentQuestion()!)">
+          <div class="sum-type">
+            <p class="choice-type">
+              <strong>Questão de cálculo:</strong> Digite o resultado no campo abaixo.
+            </p>
+          </div>
+
+          <div class="sum-answer">
+            <input
+              type="number"
+              class="answer-input"
+              placeholder="Digite o resultado..."
+              [ngModel]="sumAnswers.get(getCurrentQuestion()?.id || '')"
+              (ngModelChange)="saveSumAnswer(getCurrentQuestion()?.id || '', $event)"
+            />
+          </div>
+        </div>
+
+        <div class="question-actions">
+          <button
+            ubButton
+            variant="outline"
+            [disabled]="currentQuestionIndex === 0"
+            (click)="previousQuestion()"
+          >
+            Anterior
+          </button>
+
+          <button
+            ubButton
+            variant="outline"
+            *ngIf="currentQuestionIndex < questions.length - 1"
+            (click)="nextQuestion()"
+          >
+            Próxima
+          </button>
+
+          <button
+            ubButton
+            *ngIf="currentQuestionIndex === questions.length - 1"
+            (click)="submitExam()"
+          >
+            Finalizar Simulado
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div *ngIf="!isLoading && !error && questions.length === 0" class="empty-state">
+    <h2>Nenhuma questão disponível</h2>
+    <p>Este simulado não possui questões cadastradas.</p>
+    <button ubButton (click)="router.navigate(['/practice-exams'])">Voltar para Simulados</button>
+  </div>
+</div>

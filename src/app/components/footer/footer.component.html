@@ -1,5 +1,5 @@
 <footer class="bg-yellow-900 text-white">
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-4 py-6">
     <div class="grid grid-cols-1 gap-8 md:grid-cols-4">
       <div>
         <h3 class="mb-4 text-lg font-semibold">NaHero</h3>
@@ -7,12 +7,15 @@
           Plataforma de simulados gratuita para todos os estudantes preparando-se para
           certificações.
         </p>
+        <p class="text-sm opacity-80 mt-4">
+          &copy; {{ currentYear() }} NaHero. Todos os direitos reservados.
+        </p>
       </div>
       <div>
         <h3 class="mb-4 text-lg font-semibold">Links Rápidos</h3>
         <ul class="space-y-2">
           <li>
-            <a href="#" class="text-sm opacity-80 hover:opacity-100"> Simulados </a>
+            <a href="/practice-exams" class="text-sm opacity-80 hover:opacity-100"> Simulados </a>
           </li>
           <li>
             <a href="#" class="text-sm opacity-80 hover:opacity-100"> Certificações </a>
@@ -53,9 +56,6 @@
           </a>
         </div>
       </div>
-    </div>
-    <div class="mt-8 border-t border-white/20 pt-8 text-center text-sm opacity-70">
-      <p>&copy; {{ currentYear() }} NaHero. Todos os direitos reservados.</p>
     </div>
   </div>
 </footer>

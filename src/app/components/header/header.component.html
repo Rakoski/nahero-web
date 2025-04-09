@@ -14,18 +14,28 @@
         <a href="#" class="transition-colors hover:text-yellow-200"> Contato </a>
       </nav>
       <div class="flex items-center space-x-3">
-        <a
-          href="/login"
-          class="rounded-md px-4 py-2 text-white transition-colors hover:bg-yellow-700"
+        <ng-container *ngIf="!isLoggedIn">
+          <a
+            routerLink="/login"
+            class="rounded-md px-4 py-2 text-white transition-colors hover:bg-yellow-700"
+          >
+            Login
+          </a>
+          <a
+            routerLink="/cadastro"
+            class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
+          >
+            Cadastre-se
+          </a>
+        </ng-container>
+
+        <button
+          *ngIf="isLoggedIn"
+          (click)="logout()"
+          class="rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500"
         >
-          Login
-        </a>
-        <a
-          href="/cadastro"
-          class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
-        >
-          Cadastre-se
-        </a>
+          Sair
+        </button>
       </div>
     </div>
   </div>

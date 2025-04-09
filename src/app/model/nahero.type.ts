@@ -55,3 +55,30 @@ export interface PracticeExam {
 export interface RefreshTokenResponse {
   accessToken: string;
 }
+
+export interface Question {
+  id: string;
+  questionText: string;
+  questionTypeId: number; // 1 for multiple choice, 3 for objective
+  practiceExamId: string;
+  imageUrl?: string;
+  position: number;
+}
+
+export interface Alternative {
+  id: string;
+  content: string;
+  isCorrect: boolean;
+  questionId: string;
+  position: number;
+}
+
+export interface ListQuestionsByStudentResponse {
+  timeLimit: number | undefined;
+  id: string;
+  content: string;
+  questionType: { id: number; name: string };
+  practiceExamId: string;
+  imageUrl?: string;
+  position: number;
+}
