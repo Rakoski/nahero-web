@@ -79,10 +79,9 @@ export class PracticeExamCardComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // We no longer create the attempt here - the practice-attempt component will handle it at submission
     setTimeout(() => {
       this.isLoading = false;
       this.router.navigate(['/student/practice-attempt/', practiceExamId]);
-    }, 500); // Small delay to show loading state
+    }, 500);
   }
 }

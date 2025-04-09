@@ -101,10 +101,6 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Load alternatives only for the currently displayed question
-   * to avoid fetching all alternatives at once
-   */
   loadAlternativesForCurrentQuestion(): void {
     const currentQuestion = this.getCurrentQuestion();
     if (!currentQuestion) return;
@@ -310,6 +306,14 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.loadingMessage = 'Enviando respostas...';
 
+    if (this.attemptId && this.attemptId !== this.practiceExamId) {
+      this.finishExistingAttempt();
+    } else {
+      this.createAndFinishAttempt();
+    }
+  }
+
+  private createAndFinishAttempt(): void {
     this.http
       .post<number>(`${API_URL}student-practice-attempts`, {
         practiceExamId: this.practiceExamId,
@@ -317,43 +321,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (attemptId) => {
           this.attemptId = attemptId.toString();
-
-          const answers = this.questions.map((question) => {
-            let answerData: any = { questionId: question.id };
-
-            switch (question.questionType?.id) {
-              case QuestionType.MULTIPLE_CHOICE:
-              case QuestionType.OBJECTIVE:
-              case QuestionType.TRUE_FALSE:
-                answerData.alternativeIds = this.selectedAnswers.get(question.id) || [];
-                break;
-              case QuestionType.DESCRIPTIVE:
-                answerData.descriptiveAnswer = this.descriptiveAnswers.get(question.id) || '';
-                break;
-              case QuestionType.SUM:
-                answerData.sumAnswer = this.sumAnswers.get(question.id) || null;
-                break;
-            }
-
-            return answerData;
-          });
-
-          this.http
-            .post(`${API_URL}student-practice-attempts/${this.attemptId}/submit`, {
-              answers,
-            })
-            .subscribe({
-              next: () => {
-                this.examSubmitted = true;
-                this.isLoading = false;
-                this.router.navigate(['/student/practice-attempt/results', this.attemptId]);
-              },
-              error: (error) => {
-                console.error('Error submitting exam:', error);
-                this.error = 'Erro ao enviar respostas. Por favor, tente novamente.';
-                this.isLoading = false;
-              },
-            });
+          this.finishExistingAttempt();
         },
         error: (error) => {
           console.error('Error creating attempt:', error);
@@ -361,5 +329,49 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       });
+  }
+
+  private finishExistingAttempt(): void {
+    const answers = this.prepareAnswers();
+
+    this.http
+      .put<boolean>(`${API_URL}student-practice-attempts/finish`, {
+        studentPracticeAttemptId: parseInt(this.attemptId!),
+        answers: answers,
+      })
+      .subscribe({
+        next: (approved) => {
+          this.examSubmitted = true;
+          this.isLoading = false;
+          this.router.navigate(['/student/practice-attempt/results', this.attemptId, approved]);
+        },
+        error: (error) => {
+          console.error('Error finishing exam:', error);
+          this.error = 'Erro ao enviar respostas. Por favor, tente novamente.';
+          this.isLoading = false;
+        },
+      });
+  }
+
+  private prepareAnswers() {
+    return this.questions.map((question) => {
+      let answerData: any = { questionId: question.id };
+
+      switch (question.questionType?.id) {
+        case QuestionType.MULTIPLE_CHOICE:
+        case QuestionType.OBJECTIVE:
+        case QuestionType.TRUE_FALSE:
+          answerData.alternativeIds = this.selectedAnswers.get(question.id) || [];
+          break;
+        case QuestionType.DESCRIPTIVE:
+          answerData.descriptiveAnswer = this.descriptiveAnswers.get(question.id) || '';
+          break;
+        case QuestionType.SUM:
+          answerData.sumAnswer = this.sumAnswers.get(question.id) || null;
+          break;
+      }
+
+      return answerData;
+    });
   }
 }

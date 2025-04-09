@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NonAuthGuard } from './guards/non-auth.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { ResultsComponent } from './pages/student/practice-attempt/results/results.component';
 
 export const routes: Routes = [
   {
@@ -54,14 +55,22 @@ export const routes: Routes = [
       {
         path: 'practice-attempt/results/:attemptId',
         loadComponent: () => {
-          // This will be created in the future for results view
           return import('./pages/student/practice-attempt/practice-attempt.component').then(
             (m) => m.PracticeAttemptComponent
           );
         },
         canActivate: [AuthGuard],
-      }
-    ]
+      },
+      {
+        path: 'practice-attempt/results/:attemptId/:result',
+        loadComponent: () => {
+          return import('./pages/student/practice-attempt/results/results.component').then(
+            (m) => m.ResultsComponent
+          );
+        },
+        canActivate: [AuthGuard],
+      },
+    ],
   },
 ];
 
