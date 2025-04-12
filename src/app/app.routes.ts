@@ -35,10 +35,10 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => {
       return import('./pages/unauthenticated/register/register.component').then(
-        (m) => m.RegisterComponent
+        (m) => m.RegisterPageComponent
       );
     },
-    canActivate: [NonAuthGuard],
+    // canActivate: [NonAuthGuard],
   },
   {
     path: 'student',

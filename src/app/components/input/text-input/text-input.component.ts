@@ -1,38 +1,43 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
-  selector: 'app-checked-email-input',
+  selector: 'app-text-input',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   template: `
-    <div class="relative w-full">
+    <div class="relative h-full">
       <input
-        type="text"
+        [type]="type"
         [placeholder]="placeholder"
-        [value]="value"
-        (input)="onInputChange($event)"
+        (ngModel)="(value)"
         (blur)="onTouched()"
+        (input)="onChange($event)"
         class="w-full rounded-md border border-input bg-transparent px-3 py-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        [class.border-red-500]="isInvalid"
+        [disabled]="disabled"
       />
     </div>
   `,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CheckedEmailInputComponent),
+      useExisting: forwardRef(() => TextInputComponent),
       multi: true,
     },
   ],
 })
-export class CheckedEmailInputComponent implements ControlValueAccessor {
-  @Input() placeholder: string = '';
-  @Input() isInvalid: boolean = false;
+export class TextInputComponent implements ControlValueAccessor {
+  @Input() placeholder = '';
+  @Input() type = 'text';
 
   value: string = '';
-  disabled: boolean = false;
+  disabled = false;
 
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -42,7 +47,9 @@ export class CheckedEmailInputComponent implements ControlValueAccessor {
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this.onChange = (event: any) => {
+      fn(event.target.value);
+    };
   }
 
   registerOnTouched(fn: any): void {
@@ -51,11 +58,5 @@ export class CheckedEmailInputComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-  }
-
-  onInputChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.value = value;
-    this.onChange(value);
   }
 }
