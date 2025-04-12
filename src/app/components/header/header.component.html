@@ -1,26 +1,41 @@
 <header class="text-white shadow-md">
   <div class="container mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
-      <a href="/" class="text-2xl font-bold text-yellow-500"> NaHero </a>
+      <div class="flex flex-row gap-3">
+        <a href="/">
+          <img src="/favicon.ico" width="30px" />
+        </a>
+        <a href="/" class="text-2xl font-bold text-yellow-500"> NaHero </a>
+      </div>
       <nav class="hidden space-x-6 md:flex">
-        <a href="#" class="transition-colors hover:text-green-200"> Simulados </a>
-        <a href="#" class="transition-colors hover:text-green-200"> Certificações </a>
-        <a href="#" class="transition-colors hover:text-green-200"> Sobre </a>
-        <a href="#" class="transition-colors hover:text-green-200"> Contato </a>
+        <a href="/practice-exams" class="transition-colors hover:text-yellow-200"> Simulados </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> Certificações </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> Sobre </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> Contato </a>
       </nav>
       <div class="flex items-center space-x-3">
-        <a
-          href="/login"
-          class="rounded-md px-4 py-2 text-white transition-colors hover:bg-yellow-700"
+        <ng-container *ngIf="!isLoggedIn">
+          <a
+            routerLink="/login"
+            class="rounded-md px-4 py-2 text-white transition-colors hover:bg-yellow-700"
+          >
+            Login
+          </a>
+          <a
+            routerLink="/register"
+            class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
+          >
+            Cadastre-se
+          </a>
+        </ng-container>
+
+        <button
+          *ngIf="isLoggedIn"
+          (click)="logout()"
+          class="rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500"
         >
-          Login
-        </a>
-        <a
-          href="/cadastro"
-          class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
-        >
-          Cadastre-se
-        </a>
+          Sair
+        </button>
       </div>
     </div>
   </div>

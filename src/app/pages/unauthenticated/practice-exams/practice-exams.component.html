@@ -1,0 +1,143 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Simulados</h1>
+    <div class="flex flex-col md:flex-row md:items-end gap-4 mb-4">
+      <div class="flex-1">
+        <input
+          ubInput
+          type="text"
+          placeholder="Buscar Simulados..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          class="w-full"
+        />
+      </div>
+      <button
+        ubButton
+        class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+        (click)="onSearch()"
+      >
+        Pesquisar
+      </button>
+      <button
+        ubButton
+        class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-secondary/90 flex items-center gap-2"
+        (click)="toggleFilterModal()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        Filtrar por
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="showFilterModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    (click)="closeFilterModal($event)"
+  >
+    <div class="bg-card text-card-foreground shadow-lg rounded-lg p-6 w-full max-w-md">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Filtrar Simulados</h3>
+      </div>
+
+      <div class="mb-4">
+        <h4 class="text-sm font-medium mb-2">Nível de Dificuldade</h4>
+        <div class="space-y-2">
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="all-difficulty"
+              name="difficultyLevel"
+              [checked]="filters.difficultyLevel === undefined"
+              (change)="setDifficultyFilter(undefined)"
+              class="mr-2"
+            />
+            <label for="all-difficulty">Todos</label>
+          </div>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="beginner"
+              name="difficultyLevel"
+              [checked]="filters.difficultyLevel === 1"
+              (change)="setDifficultyFilter(1)"
+              class="mr-2"
+            />
+            <label for="beginner">Fundação</label>
+          </div>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="intermediate"
+              name="difficultyLevel"
+              [checked]="filters.difficultyLevel === 2"
+              (change)="setDifficultyFilter(2)"
+              class="mr-2"
+            />
+            <label for="intermediate">Associado</label>
+          </div>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="advanced"
+              name="difficultyLevel"
+              [checked]="filters.difficultyLevel === 3"
+              (change)="setDifficultyFilter(3)"
+              class="mr-2"
+            />
+            <label for="advanced">Profissional</label>
+          </div>
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="expert"
+              name="difficultyLevel"
+              [checked]="filters.difficultyLevel === 4"
+              (change)="setDifficultyFilter(4)"
+              class="mr-2"
+            />
+            <label for="expert">Especialidade</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button
+          ubButton
+          class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+          (click)="applyFilters()"
+        >
+          Aplicar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (practiceExam of practiceExams; track practiceExam.id) {
+    <app-practice-exam-card [practiceExam]="practiceExam"></app-practice-exam-card>
+    }
+  </div>
+
+  @if (practiceExams.length === 0) {
+  <div class="text-center py-12 text-muted-foreground">Nenhum simulado encontrado.</div>
+  } @if (loading) {
+  <div class="flex justify-center my-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+  } @if (allLoaded && practiceExams.length > 0) {
+  <div class="text-center my-8 text-muted-foreground">Sem mais simulados.</div>
+  }
+</div>

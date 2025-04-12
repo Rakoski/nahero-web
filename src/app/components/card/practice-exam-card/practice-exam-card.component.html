@@ -1,0 +1,90 @@
+<div ubCard class="overflow-hidden h-full flex flex-col">
+  <div ubCardHeader>
+    <div class="flex justify-between items-start mb-2">
+      <div>
+        <h3 ubCardTitle>{{ practiceExam.title }}</h3>
+        <p ubCardDescription>{{ practiceExam.exam.title }}</p>
+      </div>
+      <div class="px-2 py-1 bg-primary text-primary-foreground rounded text-sm shrink-0">
+        {{ getDifficultyLabel(practiceExam.difficultyLevel ?? 0) }}
+      </div>
+    </div>
+  </div>
+  <div ubCardContent class="flex-grow">
+    <p class="mb-4 line-clamp-3">{{ practiceExam.description }}</p>
+    <div class="space-y-2 text-sm text-muted-foreground">
+      <div class="flex items-center justify-between">
+        <span>Tempo Limite:</span>
+        <span>{{ formatTimeLimit(practiceExam.timeLimit) }}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span>Nota mínima:</span>
+        <span>{{ practiceExam.passingScore }}%</span>
+      </div>
+    </div>
+  </div>
+  <div ubCardFooter class="justify-end space-x-2 mt-auto">
+    <ng-template #examDialog>
+      <div ubDialogContent>
+        <div ubDialogHeader>
+          <h2 ubDialogTitle>Confirmar Simulado</h2>
+          <p ubDialogDescription>Confira as informações do simulado antes de começar.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium text-lg">{{ practiceExam.title }}</h4>
+            <p *ngIf="practiceExam.description" class="text-sm text-muted-foreground mt-1">
+              {{ practiceExam.description }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-muted-foreground">Nível de Dificuldade</p>
+              <p class="font-medium">{{ getDifficultyLabel(practiceExam.difficultyLevel ?? 0) }}</p>
+            </div>
+
+            <div>
+              <p class="text-sm text-muted-foreground">Tempo</p>
+              <p class="font-medium">{{ formatTimeLimit(practiceExam.timeLimit) }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="practiceExam.passingScore">
+            <p class="text-sm text-muted-foreground">Nota para aprovação</p>
+            <p class="font-medium">{{ practiceExam.passingScore }}%</p>
+          </div>
+
+          <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <div ubDialogFooter>
+          <button ubButton variant="outline" ubDialogClose>Cancelar</button>
+          <button
+            ubButton
+            ubDialogClose
+            class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+            [disabled]="isLoading"
+            (click)="startExam(practiceExam.id)"
+          >
+            <span
+              *ngIf="isLoading"
+              class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"
+            ></span>
+            Começar
+          </button>
+        </div>
+      </div>
+    </ng-template>
+    <button
+      ubButton
+      class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+      [ubDialogTrigger]="examDialog"
+    >
+      Começar
+    </button>
+  </div>
+</div>

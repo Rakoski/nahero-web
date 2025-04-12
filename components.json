@@ -1,11 +1,9 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.adrianub.dev/schema.json",
   "style": "new-york",
-  "rsc": true,
-  "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "src/app/globals.css",
+    "config": "tailwind.config.js",
+    "css": "src/styles.scss",
     "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""
@@ -13,6 +11,9 @@
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "routes": "@/routes"
-  }
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "services": "@/services"
+  },
+  "iconLibrary": "lucide"
 }
