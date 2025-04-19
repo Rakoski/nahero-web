@@ -59,15 +59,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "your-app-name:build",
+            "host": "0.0.0.0",
+            "allowedHosts": ["mrakoski.tech", "localhost"]
+          },
           "configurations": {
             "production": {
               "buildTarget": "nahero-web:build:production"
             },
-              "options": {
-                "browserTarget": "your-app-name:build",
-                "host": "0.0.0.0",
-                "allowedHosts": ["mrakoski.tech", "localhost"]
-              }
             "development": {
               "buildTarget": "nahero-web:build:development"
             }
