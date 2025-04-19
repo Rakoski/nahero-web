@@ -63,6 +63,11 @@
             "production": {
               "buildTarget": "nahero-web:build:production"
             },
+              "options": {
+                "browserTarget": "your-app-name:build",
+                "host": "0.0.0.0",
+                "allowedHosts": ["mrakoski.tech", "localhost"]
+              }
             "development": {
               "buildTarget": "nahero-web:build:development"
             }
