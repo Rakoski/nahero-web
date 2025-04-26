@@ -1,6 +1,6 @@
 <div class="flex flex-col md:w-[750px] lg:w-[600px] md:h-[500px] mx-auto">
   <div class="text-center mb-12">
-    <h2 class="text-3xl font-bold text-yellow-500">Já faz parte do time Nahero?</h2>
+    <h2 class="text-3xl font-bold text-yellow-500">Already part of the Nahero team?</h2>
   </div>
 
   <form [formGroup]="loginForm" (ngSubmit)="handleSubmit()" class="flex flex-col gap-1">
@@ -23,7 +23,7 @@
 
     <div class="flex flex-col gap-1">
       <app-password-input
-        placeholder="Senha"
+        placeholder="Password"
         formControlName="password"
         class="w-full h-12"
       ></app-password-input>
@@ -43,7 +43,7 @@
         class="text-md font-bold cursor-pointer hover:underline text-brand-orange-gradient"
         (click)="navigateTo('/forgot-password')"
       >
-        Esqueceu sua senha?
+        Forgot your password?
       </a>
     </div>
 
@@ -60,7 +60,7 @@
       <ng-container *ngIf="isLoading; else loginText">
         <app-tb-loader></app-tb-loader>
       </ng-container>
-      <ng-template #loginText>Entrar</ng-template>
+      <ng-template #loginText>Login</ng-template>
     </app-button>
 
     <div class="h-6 flex justify-center mt-2">
@@ -69,12 +69,12 @@
     </div>
 
     <div class="w-full bg-gray-200 p-3 rounded-md flex justify-center items-center md:mt-6 gap-3">
-      <span class="text-gray-700 md:ml-0 ml-3">Novo por aqui?</span>
+      <span class="text-gray-700 md:ml-0 ml-3">New here?</span>
       <a
         class="font-bold cursor-pointer hover:underline text-yellow-700 rounded-md"
         (click)="navigateTo('/register')"
       >
-        Cadastre-se agora!
+        Register now!
       </a>
     </div>
   </form>

@@ -14,11 +14,11 @@
     <p class="mb-4 line-clamp-3">{{ practiceExam.description }}</p>
     <div class="space-y-2 text-sm text-muted-foreground">
       <div class="flex items-center justify-between">
-        <span>Tempo Limite:</span>
+        <span>Time Limit:</span>
         <span>{{ formatTimeLimit(practiceExam.timeLimit) }}</span>
       </div>
       <div class="flex items-center justify-between">
-        <span>Nota mínima:</span>
+        <span>Minimum score:</span>
         <span>{{ practiceExam.passingScore }}%</span>
       </div>
     </div>
@@ -27,8 +27,8 @@
     <ng-template #examDialog>
       <div ubDialogContent>
         <div ubDialogHeader>
-          <h2 ubDialogTitle>Confirmar Simulado</h2>
-          <p ubDialogDescription>Confira as informações do simulado antes de começar.</p>
+          <h2 ubDialogTitle>Confirm Practice Exam</h2>
+          <p ubDialogDescription>Check the practice exam information before starting.</p>
         </div>
 
         <div class="space-y-4">
@@ -41,18 +41,18 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <p class="text-sm text-muted-foreground">Nível de Dificuldade</p>
+              <p class="text-sm text-muted-foreground">Difficulty Level</p>
               <p class="font-medium">{{ getDifficultyLabel(practiceExam.difficultyLevel ?? 0) }}</p>
             </div>
 
             <div>
-              <p class="text-sm text-muted-foreground">Tempo</p>
+              <p class="text-sm text-muted-foreground">Time</p>
               <p class="font-medium">{{ formatTimeLimit(practiceExam.timeLimit) }}</p>
             </div>
           </div>
 
           <div *ngIf="practiceExam.passingScore">
-            <p class="text-sm text-muted-foreground">Nota para aprovação</p>
+            <p class="text-sm text-muted-foreground">Passing score</p>
             <p class="font-medium">{{ practiceExam.passingScore }}%</p>
           </div>
 
@@ -62,7 +62,7 @@
         </div>
 
         <div ubDialogFooter>
-          <button ubButton variant="outline" ubDialogClose>Cancelar</button>
+          <button ubButton variant="outline" ubDialogClose>Cancel</button>
           <button
             ubButton
             ubDialogClose
@@ -74,7 +74,7 @@
               *ngIf="isLoading"
               class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"
             ></span>
-            Começar
+            Start
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@
       class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
       [ubDialogTrigger]="examDialog"
     >
-      Começar
+      Start
     </button>
   </div>
 </div>
