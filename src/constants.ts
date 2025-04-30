@@ -8,4 +8,4 @@ declare global {
 
 export const size = 6;
 
-export const API_URL = 'http://mrakoski.tech/api/v1/';
+export const API_URL = 'https://mrakoski.tech/api/v1/';
