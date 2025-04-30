@@ -1,5 +1,5 @@
 (function (window) {
   window.env = window.env || {};
 
-  window.env.apiUrl = 'http://mrakoski.tech/api/v1/';
+  window.env.apiUrl = 'https://mrakoski.tech/api/v1/';
 })(this);
