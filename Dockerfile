@@ -1,13 +1,12 @@
-FROM node:22-alpine
+FROM node:22-alpine as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-
-RUN npm install -D process
-
 RUN npm run build
 
-EXPOSE 4200
-
-CMD ["sh", "-c", "API_URL=http://backend:8081/api/v1/ npx ng serve --host 0.0.0.0 --hmr"]
+FROM nginx:alpine
+COPY --from=build /app/dist/nahero-web /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
