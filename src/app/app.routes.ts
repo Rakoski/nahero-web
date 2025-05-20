@@ -38,7 +38,6 @@ export const routes: Routes = [
         (m) => m.RegisterPageComponent
       );
     },
-    // canActivate: [NonAuthGuard],
   },
   {
     path: 'student',
@@ -62,7 +61,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'practice-attempt/results/:attemptId/:result',
+        path: 'results/:attemptId',
         loadComponent: () => {
           return import('./pages/student/practice-attempt/results/results.component').then(
             (m) => m.ResultsComponent

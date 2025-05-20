@@ -7,17 +7,11 @@ import {
   Alternative,
   ListQuestionsByStudentResponse,
   PracticeExam,
+  QuestionType,
+  ResultsResponse,
 } from '../../../model/nahero.type';
 import { API_URL } from '../../../../constants';
 import { UbButtonDirective } from '@/components/ui/button';
-
-export enum QuestionType {
-  MULTIPLE_CHOICE = 1,
-  TRUE_FALSE = 2,
-  OBJECTIVE = 3,
-  DESCRIPTIVE = 4,
-  SUM = 5,
-}
 
 @Component({
   selector: 'app-practice-attempt',
@@ -335,15 +329,18 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     const answers = this.prepareAnswers();
 
     this.http
-      .put<boolean>(`${API_URL}student-practice-attempts/finish`, {
+      .put<ResultsResponse>(`${API_URL}student-practice-attempts/finish`, {
         studentPracticeAttemptId: parseInt(this.attemptId!),
         answers: answers,
       })
       .subscribe({
-        next: (approved) => {
+        next: (results) => {
           this.examSubmitted = true;
           this.isLoading = false;
-          this.router.navigate(['/student/practice-attempt/results', this.attemptId, approved]);
+          const practiceExamId = this.practiceExamId;
+          this.router.navigate(['/student/results', this.attemptId], {
+            state: { results, practiceExamId },
+          });
         },
         error: (error) => {
           console.error('Error finishing exam:', error);
