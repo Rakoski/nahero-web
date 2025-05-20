@@ -10,13 +10,13 @@ export function cn(...inputs: ClassValue[]): string {
 export function getDifficultyLabel(level: number): string {
   switch (level) {
     case 1:
-      return 'Fundação';
+      return 'Foundational';
     case 2:
-      return 'Associado';
+      return 'Associate';
     case 3:
-      return 'Profissional';
+      return 'Professional';
     case 4:
-      return 'Especialidade';
+      return 'Specialty';
     default:
       return 'Unknown';
   }
@@ -35,16 +35,16 @@ export function formatTimeLimit(minutes?: number): string {
 export function getQuestionTypeLabel(typeId: number): string {
   switch (typeId) {
     case QuestionType.MULTIPLE_CHOICE:
-      return 'Múltipla Escolha';
+      return 'Multiple Choice';
     case QuestionType.TRUE_FALSE:
-      return 'Verdadeiro/Falso';
+      return 'True/False';
     case QuestionType.OBJECTIVE:
-      return 'Objetiva';
+      return 'Objective';
     case QuestionType.DESCRIPTIVE:
-      return 'Dissertativa';
+      return 'Dissertative';
     case QuestionType.SUM:
-      return 'Soma';
+      return 'Sum';
     default:
-      return 'Desconhecido';
+      return 'Unknown';
   }
 }
