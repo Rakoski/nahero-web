@@ -82,3 +82,25 @@ export interface ListQuestionsByStudentResponse {
   imageUrl?: string;
   position: number;
 }
+
+export interface ResultsResponse {
+  passed: boolean;
+  score: number;
+  answers: number;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  startTime: string;
+  endTime: string;
+  timeLimit: number;
+  timeSpentInMinutes: number;
+  attemptStatus: string;
+  numberOfQuestions: number;
+}
+
+export enum QuestionType {
+  MULTIPLE_CHOICE = 1,
+  TRUE_FALSE = 2,
+  OBJECTIVE = 3,
+  DESCRIPTIVE = 4,
+  SUM = 5,
+}

@@ -1,10 +1,124 @@
-<div>
-  <section class="centralized">
-    <div>{{ approved }}</div>
-    <div style="margin-top: 20px">
-      <app-button ubButton (click)="router.navigate(['/practice-exams'])">
-        Back to Practice Exams
-      </app-button>
+<div class="max-w-5xl mx-auto py-8" *ngIf="!isLoading && !error">
+  <div class="flex justify-between items-center mb-8">
+    <div
+      class="py-2 px-6 rounded-full font-semibold text-sm uppercase tracking-wider text-white"
+      [ngClass]="{
+        'bg-green-600': results?.passed,
+        'bg-red-600': !results?.passed
+      }"
+    >
+      {{ results?.passed ? 'APPROVED' : 'FAILED' }}
     </div>
-  </section>
+    <div class="flex flex-col justify-center items-center">
+      <div class="text-4xl font-bold">{{ correctPercentage }}%</div>
+      <div class="text-xs uppercase">Score</div>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-center justify-center py-16" *ngIf="isLoading">
+    <div class="w-12 h-12 rounded-full border-4 border-t-primary animate-spin mb-4"></div>
+    <div class="text-lg">Loading...</div>
+  </div>
+
+  <div class="flex flex-col items-center justify-center py-16 text-center" *ngIf="error">
+    <div class="text-red-500 text-4xl mb-4"></div>
+    <div class="text-lg mb-8 max-w-md">{{ error }}</div>
+    <button ubButton (click)="router.navigate(['/practice-exams'])">Back</button>
+  </div>
+
+  <div class="rounded-lg p-4 mb-8">
+    <div class="flex flex-col justify-center col-span-2">
+      <div class="h-6 bg-gray-100 rounded-full overflow-hidden flex mb-4">
+        <div class="h-full bg-green-500" [style.width.%]="correctPercentage"></div>
+        <div class="h-full bg-red-500" [style.width.%]="incorrectPercentage"></div>
+      </div>
+
+      <div class="flex justify-between text-sm">
+        <div class="flex items-center gap-1">
+          <div class="w-3 h-3 bg-green-500 rounded"></div>
+          <div>Correct: {{ results?.correctAnswers }} ({{ correctPercentage }}%)</div>
+        </div>
+        <div class="flex items-center gap-1">
+          <div class="w-3 h-3 bg-red-500 rounded"></div>
+          <div>Incorrect: {{ results?.incorrectAnswers }} ({{ incorrectPercentage }}%)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <div class="mb-4">
+        <div class="font-semibold">
+          Out of {{ results?.numberOfQuestions }} questions you answered
+          {{ results?.correctAnswers }} correctly and {{ results?.incorrectAnswers }} incorrectly
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="font-semibold">{{ formatDuration(results?.timeSpentInMinutes || 0) }}</div>
+        <div class="text-xs">Time spent</div>
+      </div>
+
+      <div>
+        <div class="font-semibold">{{ formatDateTime(results?.endTime || '') }}</div>
+        <div class="text-xs">Finished Date</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4 mb-6">
+    <div class="flex flex-wrap gap-2">
+      <button ubButton (click)="showQuestions('all')">
+        View All ({{ results?.answers || 0 }})
+      </button>
+      <button ubButton (click)="showQuestions('correct')">
+        Correct ({{ results?.correctAnswers || 0 }})
+      </button>
+      <button ubButton (click)="showQuestions('incorrect')">
+        Incorrect ({{ results?.incorrectAnswers || 0 }})
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap justify-between gap-4">
+    <button ubButton class="min-w-40" (click)="router.navigate(['/practice-exams'])">
+      Back to Practice Exams
+    </button>
+
+    <button
+      ubButton
+      class="min-w-40"
+      *ngIf="!results?.passed"
+      (click)="router.navigate(['/student/practice-attempt', practiceExamId])"
+    >
+      Try again
+    </button>
+  </div>
+</div>
+
+<div class="flex flex-col items-center justify-center py-16" *ngIf="isLoading">
+  <div
+    class="w-12 h-12 rounded-full border-4 border-gray-200 border-t-primary animate-spin mb-4"
+  ></div>
+  <div class="text-lg">Loading...</div>
+</div>
+
+<div class="flex flex-col items-center justify-center py-16 text-center" *ngIf="error">
+  <div class="text-red-500 text-4xl mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-16 w-16"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      />
+    </svg>
+  </div>
+  <div class="text-lg mb-8 max-w-md">{{ error }}</div>
+  <button ubButton (click)="router.navigate(['/practice-exams'])">Back</button>
 </div>

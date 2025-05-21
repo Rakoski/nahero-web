@@ -190,10 +190,4 @@
       </div>
     </main>
   </div>
-
-  <div *ngIf="!isLoading && !error && questions.length === 0" class="empty-state">
-    <h2>No questions available</h2>
-    <p>This practice exam has no registered questions.</p>
-    <button ubButton (click)="router.navigate(['/practice-exams'])">Back to Practice Exams</button>
-  </div>
 </div>
