@@ -18,8 +18,8 @@ export class ResultsComponent implements OnInit {
 
   ngOnInit(): void {
     this.approved = this.route.snapshot.paramMap.get('result');
-    if (this.approved === 'false') this.approved = 'reprovado';
-    else this.approved = 'aprovado';
+    if (this.approved === 'false') this.approved = 'failed';
+    else this.approved = 'approved';
     if (!this.approved) {
       return;
     }
