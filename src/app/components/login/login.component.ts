@@ -80,7 +80,7 @@ export class LoginFormComponent implements OnInit {
         },
         error: (err) => {
           if (err.status === 401) {
-            this.errorResult = 'Invalud e-mail or password.';
+            this.errorResult = 'Invalid e-mail or password.';
           } else {
             this.errorResult = 'An error ocurred while logging in. Please Try again later.';
           }
