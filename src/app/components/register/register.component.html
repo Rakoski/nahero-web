@@ -1,7 +1,7 @@
 <div class="flex justify-center items-center">
   <div class="w-full max-w-sm sm:max-w-md md:max-w-lg rounded-lg shadow-md p-4">
     <div class="text-center mb-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-yellow-500">Faça parte do time Nahero!</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-yellow-500">Join the Nahero team!</h2>
     </div>
 
     <form
@@ -11,7 +11,7 @@
     >
       <div class="flex flex-col gap-1">
         <app-text-input
-          placeholder="Nome completo"
+          placeholder="Full name"
           formControlName="name"
           class="w-full h-12"
         ></app-text-input>
@@ -30,7 +30,7 @@
         <div class="flex w-full items-center justify-between">
           <div class="flex-grow w-full">
             <app-text-input
-              [placeholder]="isPassportMode ? 'Número do Passaporte' : 'CPF (000.000.000-00)'"
+              [placeholder]="isPassportMode ? 'Passport Number' : 'CPF (000.000.000-00)'"
               [formControlName]="isPassportMode ? 'passportNumber' : 'cpf'"
               class="w-full h-12"
               (input)="isPassportMode ? null : formatCPF($event)"
@@ -45,7 +45,7 @@
             [checked]="isPassportMode"
             (change)="toggleIdentificationMethod()"
           />
-          <label for="usePassport" class="ml-1 text-sm">Usar número do passaporte</label>
+          <label for="usePassport" class="ml-1 text-sm">Use passport number</label>
         </div>
         <span
           *ngIf="
@@ -63,7 +63,7 @@
 
       <div class="flex flex-col gap-1">
         <app-text-input
-          placeholder="Telefone (00) 00000-0000"
+          placeholder="Phone (00) 00000-0000"
           formControlName="phone"
           class="w-full h-12"
           (input)="formatPhone($event)"
@@ -98,7 +98,7 @@
 
       <div class="flex flex-col gap-1">
         <app-password-input
-          placeholder="Senha"
+          placeholder="Password"
           formControlName="password"
           class="w-full h-12"
         ></app-password-input>
@@ -115,7 +115,7 @@
 
       <div class="flex flex-col gap-1">
         <app-password-input
-          placeholder="Confirmar senha"
+          placeholder="Confirm password"
           formControlName="confirmPassword"
           class="w-full h-12"
         ></app-password-input>
@@ -145,7 +145,7 @@
         <ng-container *ngIf="isLoading; else registerText">
           <app-tb-loader></app-tb-loader>
         </ng-container>
-        <ng-template #registerText>Cadastrar</ng-template>
+        <ng-template #registerText>Register</ng-template>
       </app-button>
 
       <div class="h-2 flex justify-center">
@@ -156,12 +156,12 @@
       <div
         class="w-full bg-gray-100 p-3 rounded-md flex flex-wrap justify-center items-center gap-2"
       >
-        <span class="text-gray-700 text-sm md:text-base">Já tem uma conta?</span>
+        <span class="text-gray-700 text-sm md:text-base">Already have an account?</span>
         <a
           class="font-bold cursor-pointer hover:underline text-yellow-700 text-sm md:text-base"
           (click)="navigateTo('/login')"
         >
-          Faça Login!
+          Login!
         </a>
       </div>
     </form>

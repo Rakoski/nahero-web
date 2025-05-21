@@ -18,7 +18,7 @@
     <div>
       <p>{{ error }}</p>
       <button ubButton (click)="router.navigate(['/practice-exams'])" style="margin-top: 10px">
-        Voltar para Simulados
+        Back to Practice Exams
       </button>
     </div>
   </div>
@@ -26,7 +26,7 @@
   <div *ngIf="!isLoading && !error && questions.length > 0" class="exam-content">
     <div class="question-nav">
       <div class="exam-timer" [ngClass]="{ warning: timeRemaining < 300 }">
-        <span class="mr-2">Tempo restante:</span>
+        <span class="mr-2">Time remaining:</span>
         <span class="timer-value">{{ formatTime() }}</span>
       </div>
 
@@ -61,7 +61,7 @@
       </div>
 
       <div class="question-counter">
-        <span>{{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
+        <span>{{ currentQuestionIndex + 1 }} of {{ questions.length }}</span>
       </div>
     </div>
 
@@ -69,7 +69,7 @@
       <div class="question-content">
         <div class="question-card">
           <div class="question-text">
-            <h2 class="mb-2">Questão {{ currentQuestionIndex + 1 }}</h2>
+            <h2 class="mb-2">Question {{ currentQuestionIndex + 1 }}</h2>
             <div [innerHTML]="getCurrentQuestion()?.content"></div>
 
             <div *ngIf="getCurrentQuestion()?.imageUrl" class="question-image">
@@ -96,7 +96,7 @@
                   >Loading...</span
                 >
               </div>
-              <div class="text-sm mt-2">Carregando alternativas...</div>
+              <div class="text-sm mt-2">Loading alternatives...</div>
             </div>
           </div>
 
@@ -127,7 +127,7 @@
         >
           <div class="descriptive-type">
             <p class="choice-type">
-              <strong>Questão dissertativa:</strong> Elabore sua resposta no campo abaixo.
+              <strong>Essay question:</strong> Write your answer in the field below.
             </p>
           </div>
 
@@ -135,7 +135,7 @@
             <textarea
               class="answer-textarea"
               rows="8"
-              placeholder="Digite sua resposta aqui..."
+              placeholder="Type your answer here..."
               (ngModel)="descriptiveAnswers.get(getCurrentQuestion()?.id || '')"
               (ngModelChange)="saveDescriptiveAnswer(getCurrentQuestion()?.id || '', $event)"
             ></textarea>
@@ -145,7 +145,7 @@
         <div class="sum-container" *ngIf="getCurrentQuestion() && isSum(getCurrentQuestion()!)">
           <div class="sum-type">
             <p class="choice-type">
-              <strong>Questão de cálculo:</strong> Digite o resultado no campo abaixo.
+              <strong>Calculation question:</strong> Enter the result in the field below.
             </p>
           </div>
 
@@ -153,7 +153,7 @@
             <input
               type="number"
               class="answer-input"
-              placeholder="Digite o resultado..."
+              placeholder="Enter the result..."
               [ngModel]="sumAnswers.get(getCurrentQuestion()?.id || '')"
               (ngModelChange)="saveSumAnswer(getCurrentQuestion()?.id || '', $event)"
             />
@@ -167,7 +167,7 @@
             [disabled]="currentQuestionIndex === 0"
             (click)="previousQuestion()"
           >
-            Anterior
+            Previous
           </button>
 
           <button
@@ -176,7 +176,7 @@
             *ngIf="currentQuestionIndex < questions.length - 1"
             (click)="nextQuestion()"
           >
-            Próxima
+            Next
           </button>
 
           <button
@@ -184,16 +184,10 @@
             *ngIf="currentQuestionIndex === questions.length - 1"
             (click)="submitExam()"
           >
-            Finalizar Simulado
+            Finish Exam
           </button>
         </div>
       </div>
     </main>
-  </div>
-
-  <div *ngIf="!isLoading && !error && questions.length === 0" class="empty-state">
-    <h2>Nenhuma questão disponível</h2>
-    <p>Este simulado não possui questões cadastradas.</p>
-    <button ubButton (click)="router.navigate(['/practice-exams'])">Voltar para Simulados</button>
   </div>
 </div>

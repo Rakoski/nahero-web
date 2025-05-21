@@ -1,12 +1,12 @@
 <div class="container mx-auto px-4 py-8">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold mb-4">Simulados</h1>
+    <h1 class="text-3xl font-bold mb-4">Practice Exams</h1>
     <div class="flex flex-col md:flex-row md:items-end gap-4 mb-4">
       <div class="flex-1">
         <input
           ubInput
           type="text"
-          placeholder="Buscar Simulados..."
+          placeholder="Search Practice Exams..."
           [(ngModel)]="searchQuery"
           (keyup.enter)="onSearch()"
           class="w-full"
@@ -17,7 +17,7 @@
         class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
         (click)="onSearch()"
       >
-        Pesquisar
+        Search
       </button>
       <button
         ubButton
@@ -37,7 +37,7 @@
         >
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         </svg>
-        Filtrar por
+        Filter by
       </button>
     </div>
   </div>
@@ -49,11 +49,11 @@
   >
     <div class="bg-card text-card-foreground shadow-lg rounded-lg p-6 w-full max-w-md">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold">Filtrar Simulados</h3>
+        <h3 class="text-lg font-semibold">Filter Practice Exams</h3>
       </div>
 
       <div class="mb-4">
-        <h4 class="text-sm font-medium mb-2">Nível de Dificuldade</h4>
+        <h4 class="text-sm font-medium mb-2">Difficulty Level</h4>
         <div class="space-y-2">
           <div class="flex items-center">
             <input
@@ -64,7 +64,7 @@
               (change)="setDifficultyFilter(undefined)"
               class="mr-2"
             />
-            <label for="all-difficulty">Todos</label>
+            <label for="all-difficulty">All</label>
           </div>
           <div class="flex items-center">
             <input
@@ -75,7 +75,7 @@
               (change)="setDifficultyFilter(1)"
               class="mr-2"
             />
-            <label for="beginner">Fundação</label>
+            <label for="beginner">Foundation</label>
           </div>
           <div class="flex items-center">
             <input
@@ -86,7 +86,7 @@
               (change)="setDifficultyFilter(2)"
               class="mr-2"
             />
-            <label for="intermediate">Associado</label>
+            <label for="intermediate">Associate</label>
           </div>
           <div class="flex items-center">
             <input
@@ -97,7 +97,7 @@
               (change)="setDifficultyFilter(3)"
               class="mr-2"
             />
-            <label for="advanced">Profissional</label>
+            <label for="advanced">Professional</label>
           </div>
           <div class="flex items-center">
             <input
@@ -108,7 +108,7 @@
               (change)="setDifficultyFilter(4)"
               class="mr-2"
             />
-            <label for="expert">Especialidade</label>
+            <label for="expert">Specialty</label>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@
           class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
           (click)="applyFilters()"
         >
-          Aplicar
+          Apply
         </button>
       </div>
     </div>
@@ -132,12 +132,12 @@
   </div>
 
   @if (practiceExams.length === 0) {
-  <div class="text-center py-12 text-muted-foreground">Nenhum simulado encontrado.</div>
+  <div class="text-center py-12 text-muted-foreground">No practice exams found.</div>
   } @if (loading) {
   <div class="flex justify-center my-8">
     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
   </div>
   } @if (allLoaded && practiceExams.length > 0) {
-  <div class="text-center my-8 text-muted-foreground">Sem mais simulados.</div>
+  <div class="text-center my-8 text-muted-foreground">No more practice exams.</div>
   }
 </div>

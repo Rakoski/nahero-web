@@ -8,10 +8,10 @@
         <a href="/" class="text-2xl font-bold text-yellow-500"> NaHero </a>
       </div>
       <nav class="hidden space-x-6 md:flex">
-        <a href="/practice-exams" class="transition-colors hover:text-yellow-200"> Simulados </a>
-        <a href="#" class="transition-colors hover:text-yellow-200"> Certificações </a>
-        <a href="#" class="transition-colors hover:text-yellow-200"> Sobre </a>
-        <a href="#" class="transition-colors hover:text-yellow-200"> Contato </a>
+        <a href="/practice-exams" class="transition-colors hover:text-yellow-200"> Practice Exams </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> Certifications </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> About </a>
+        <a href="#" class="transition-colors hover:text-yellow-200"> Contact </a>
       </nav>
       <div class="flex items-center space-x-3">
         <ng-container *ngIf="!isLoggedIn">
@@ -25,7 +25,7 @@
             routerLink="/register"
             class="hidden rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500 md:inline-block"
           >
-            Cadastre-se
+            Register
           </a>
         </ng-container>
 
@@ -34,7 +34,7 @@
           (click)="logout()"
           class="rounded-md bg-yellow-700 px-4 py-2 text-white transition-colors hover:bg-yellow-500"
         >
-          Sair
+          Logout
         </button>
       </div>
     </div>
