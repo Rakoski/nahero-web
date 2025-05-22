@@ -109,7 +109,6 @@ export class RegisterFormComponent implements OnInit {
 
     const passport = control.value.trim();
 
-    // Basic passport validation - adjust based on your specific requirements
     if (passport.length < 6 || passport.length > 15) {
       return { invalidPassport: true };
     }
@@ -120,11 +119,9 @@ export class RegisterFormComponent implements OnInit {
   toggleIdentificationMethod(): void {
     this.isPassportMode = !this.isPassportMode;
 
-    // Reset both fields
     this.registerForm.get('cpf')?.setValue('');
     this.registerForm.get('passportNumber')?.setValue('');
 
-    // Update validators
     if (this.isPassportMode) {
       this.registerForm.get('cpf')?.clearValidators();
       this.registerForm
@@ -135,7 +132,6 @@ export class RegisterFormComponent implements OnInit {
       this.registerForm.get('passportNumber')?.clearValidators();
     }
 
-    // Update validators status
     this.registerForm.get('cpf')?.updateValueAndValidity();
     this.registerForm.get('passportNumber')?.updateValueAndValidity();
   }
@@ -172,16 +168,16 @@ export class RegisterFormComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.successResult = 'Cadastro realizado com sucesso!';
+          this.successResult = 'Register success!';
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 1000);
         },
         error: (err: any) => {
           if (err.status === 409) {
-            this.errorResult = 'E-mail ou documento já cadastrado';
+            this.errorResult = 'E-mail or document already registered!';
           } else {
-            this.errorResult = 'Ocorreu um erro durante o cadastro. Tente novamente.';
+            this.errorResult = 'An error occurred while registering. Please try again later.';
           }
         },
       });
@@ -191,29 +187,29 @@ export class RegisterFormComponent implements OnInit {
     const control = this.registerForm.get(controlName);
 
     if (control?.hasError('required')) {
-      return 'Este campo é obrigatório';
+      return 'This field is required.%';
     }
     if (control?.hasError('email')) {
-      return 'E-mail inválido';
+      return 'Invalid e-mail format.';
     }
     if (control?.hasError('minlength')) {
       const requiredLength = control.getError('minlength').requiredLength;
-      return `Este campo deve ter pelo menos ${requiredLength} caracteres`;
+      return `This field has to have at least ${requiredLength} characters.`;
     }
     if (control?.hasError('pattern')) {
       if (controlName === 'phone') {
-        return 'Telefone inválido';
+        return 'Invalid phone format.';
       }
-      return 'Formato inválido';
+      return 'Invalid format.';
     }
     if (control?.hasError('invalidCpf')) {
-      return 'CPF inválido';
+      return 'Invalid CPF.';
     }
     if (control?.hasError('invalidPassport')) {
-      return 'Número de passaporte inválido';
+      return 'Invalid passport number.';
     }
     if (this.registerForm.hasError('passwordMismatch') && controlName === 'confirmPassword') {
-      return 'As senhas não coincidem';
+      return 'Passwords do not coincide.';
     }
 
     return '';

@@ -73,16 +73,16 @@ export class LoginFormComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
-          this.successResult = 'Login realizado com sucesso!';
+          this.successResult = 'Login success!';
           setTimeout(() => {
             this.router.navigate([this.returnUrl]);
           }, 1000);
         },
         error: (err) => {
           if (err.status === 401) {
-            this.errorResult = 'E-mail ou senha inválidos';
+            this.errorResult = 'Invalid e-mail or password.';
           } else {
-            this.errorResult = 'Ocorreu um erro durante o login. Tente novamente.';
+            this.errorResult = 'An error ocurred while logging in. Please Try again later.';
           }
         },
       });
@@ -91,10 +91,10 @@ export class LoginFormComponent implements OnInit {
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control?.hasError('required')) {
-      return 'Este campo é obrigatório';
+      return 'This field is required.';
     }
     if (control?.hasError('email')) {
-      return 'Formato de e-mail inválido';
+      return 'Invalid e-mail format.';
     }
     return '';
   }
