@@ -36,7 +36,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
   timerInterval: any;
 
   isLoading: boolean = true;
-  loadingMessage: string = 'Carregando simulado...';
+  loadingMessage: string = 'Loading...';
   error: string | null = null;
   examSubmitted: boolean = false;
 
@@ -51,7 +51,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     this.attemptId = this.route.snapshot.paramMap.get('attemptId');
 
     if (!this.attemptId) {
-      this.error = 'ID do simulado não encontrado';
+      this.error = 'Practice attempt not found';
       this.isLoading = false;
       return;
     }
@@ -88,8 +88,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('Error loading questions:', error);
-          this.error = 'Erro ao carregar questões do simulado. Por favor, tente novamente.';
+          this.error = 'Error in loading questions. Please try again later.';
           this.isLoading = false;
         },
       });
@@ -104,17 +103,17 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
 
       if (this.questionAlternatives.has(questionId)) return;
 
-      this.loadingMessage = 'Carregando alternativas...';
+      this.loadingMessage = 'Loading alternatives...';
 
       this.http.get<Alternative[]>(`${API_URL}alternatives/${questionId}`).subscribe({
         next: (alternatives) => {
           this.questionAlternatives.set(questionId, alternatives);
-          this.loadingMessage = 'Carregando simulado...';
+          this.loadingMessage = 'Loading...';
         },
         error: (error) => {
           console.error(`Error loading alternatives for question ${questionId}:`, error);
           this.questionAlternatives.set(questionId, []);
-          this.loadingMessage = 'Carregando simulado...';
+          this.loadingMessage = 'Loading...';
         },
       });
     }
@@ -298,7 +297,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
     if (this.examSubmitted) return;
 
     this.isLoading = true;
-    this.loadingMessage = 'Enviando respostas...';
+    this.loadingMessage = 'Sending answers...';
 
     if (this.attemptId && this.attemptId !== this.practiceExamId) {
       this.finishExistingAttempt();
@@ -318,8 +317,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
           this.finishExistingAttempt();
         },
         error: (error) => {
-          console.error('Error creating attempt:', error);
-          this.error = 'Erro ao criar tentativa do simulado. Por favor, tente novamente.';
+          this.error = 'Erro in creating practice attempt. Please try again later.';
           this.isLoading = false;
         },
       });
@@ -343,8 +341,7 @@ export class PracticeAttemptComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          console.error('Error finishing exam:', error);
-          this.error = 'Erro ao enviar respostas. Por favor, tente novamente.';
+          this.error = 'Erro in sending answers. Please Try again later.';
           this.isLoading = false;
         },
       });
