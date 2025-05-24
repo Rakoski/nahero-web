@@ -8,6 +8,10 @@ This is the front-end repository for the NaHero project - an exam simulation web
 
 It was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 
+### Quick demonstration
+
+https://github.com/user-attachments/assets/3ea32adf-4312-4627-b873-ec069ea80da4
+
 ## Development server
 
 To start, run:
