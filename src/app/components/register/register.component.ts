@@ -101,6 +101,8 @@ private validateCPF(control: AbstractControl): ValidationErrors | null {
     if (remainder !== parseInt(cpf.substring(10, 11))) {
       return { invalidCpf: true };
     }
+  } else if (cpf.length > 0 && cpf.length !== 11) {
+    return { invalidCpf: true };
   }
   
   return null;
