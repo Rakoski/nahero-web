@@ -55,54 +55,56 @@ export class RegisterFormComponent implements OnInit {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  private validateCPF(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-
-    const cpf = control.value?.replace(/[^\d]/g, '');
-
-    if (!cpf || cpf.length !== 11) {
-      return { invalidCpf: true };
-    }
-
+private validateCPF(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  
+  const cpf = control.value?.replace(/[^\d]/g, '');
+  
+  if (!cpf) {
+    return { invalidCpf: true };
+  }
+  
+  if (cpf.length === 11) {
     if (/^(\d)\1+$/.test(cpf)) {
       return { invalidCpf: true };
     }
-
+    
     let sum = 0;
     let remainder;
-
+    
     for (let i = 1; i <= 9; i++) {
       sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
     }
-
+    
     remainder = (sum * 10) % 11;
-
+    
     if (remainder === 10 || remainder === 11) {
       remainder = 0;
     }
-
+    
     if (remainder !== parseInt(cpf.substring(9, 10))) {
       return { invalidCpf: true };
     }
-
+    
     sum = 0;
-
+    
     for (let i = 1; i <= 10; i++) {
       sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
     }
-
+    
     remainder = (sum * 10) % 11;
-
+    
     if (remainder === 10 || remainder === 11) {
       remainder = 0;
     }
-
+    
     if (remainder !== parseInt(cpf.substring(10, 11))) {
       return { invalidCpf: true };
     }
-
-    return null;
   }
+  
+  return null;
+}
 
   private validatePassport(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
@@ -151,37 +153,46 @@ export class RegisterFormComponent implements OnInit {
     );
   }
 
-  handleSubmit(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
 
-    this.isLoading = true;
-    this.errorResult = '';
-    this.successResult = '';
-
-    const { name, cpf, passportNumber, phone, email, password } = this.registerForm.value;
-
-    this.userService
-      .register({ name, cpf, passportNumber, phone, email, password })
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe({
-        next: () => {
-          this.successResult = 'Register success!';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1000);
-        },
-        error: (err: any) => {
-          if (err.status === 409) {
-            this.errorResult = 'E-mail or document already registered!';
-          } else {
-            this.errorResult = 'An error occurred while registering. Please try again later.';
-          }
-        },
-      });
+handleSubmit(): void {
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
   }
+
+  this.isLoading = true;
+  this.errorResult = '';
+  this.successResult = '';
+
+  const { name, cpf, passportNumber, phone, email, password } = this.registerForm.value;
+  
+  let formattedCpf = cpf;
+  if (cpf) {
+    const cleanCpf = cpf.replace(/[^\d]/g, '');
+    if (cleanCpf.length === 11) {
+      formattedCpf = cleanCpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+    }
+  }
+
+  this.userService
+    .register({ name, cpf: formattedCpf, passportNumber, phone, email, password })
+    .pipe(finalize(() => (this.isLoading = false)))
+    .subscribe({
+      next: () => {
+        this.successResult = 'Register success!';
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1000);
+      },
+      error: (err: any) => {
+        if (err.status === 409) {
+          this.errorResult = 'E-mail or document already registered!';
+        } else {
+          this.errorResult = 'An error occurred while registering. Please try again later.';
+        }
+      },
+    });
+}
 
   getErrorMessage(controlName: string): string {
     const control = this.registerForm.get(controlName);
