@@ -57,7 +57,9 @@
               registerForm.get('cpf')?.invalid &&
               (registerForm.get('cpf')?.dirty || registerForm.get('cpf')?.touched))
           "
+          class="text-xs md:text-sm text-red-500"
         >
+          {{ isPassportMode ? getErrorMessage('passportNumber') : getErrorMessage('cpf') }}
         </span>
       </div>
 
