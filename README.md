@@ -2,9 +2,9 @@
 
 This is the front-end repository for the NaHero project - an exam simulation web app.
 
-### You can see it live 
+### You can see it live
 
-<a href="http://mrakoski.tech"><b>Here</b></a>
+<a href="http://nahero.site"><b>Here</b></a>
 
 It was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 

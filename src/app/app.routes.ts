@@ -38,6 +38,7 @@ export const routes: Routes = [
         (m) => m.RegisterPageComponent
       );
     },
+    canActivate: [NonAuthGuard],
   },
   {
     path: 'student',
